@@ -1,16 +1,16 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\file;
+namespace yiiunit\extensions\rethinkdb\file;
 
 use Yii;
 use yii\helpers\FileHelper;
-use yiiunit\extensions\mongodb\TestCase;
-use yii\mongodb\file\ActiveQuery;
-use yiiunit\extensions\mongodb\data\ar\file\ActiveRecord;
-use yiiunit\extensions\mongodb\data\ar\file\CustomerFile;
+use yiiunit\extensions\rethinkdb\TestCase;
+use yii\rethinkdb\file\ActiveQuery;
+use yiiunit\extensions\rethinkdb\data\ar\file\ActiveRecord;
+use yiiunit\extensions\rethinkdb\data\ar\file\CustomerFile;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class ActiveRecordTest extends TestCase
 {
@@ -46,7 +46,7 @@ class ActiveRecordTest extends TestCase
      */
     protected function getTestFilePath()
     {
-        return Yii::getAlias('@yiiunit/extensions/mongodb/runtime') . DIRECTORY_SEPARATOR . basename(get_class($this)) . '_' . getmypid();
+        return Yii::getAlias('@yiiunit/extensions/rethinkdb/runtime') . DIRECTORY_SEPARATOR . basename(get_class($this)) . '_' . getmypid();
     }
 
     /**
@@ -146,7 +146,7 @@ class ActiveRecordTest extends TestCase
 
         $record->save();
 
-        $this->assertTrue($record->_id instanceof \MongoId);
+        $this->assertTrue($record->_id instanceof \RethinkId);
         $this->assertFalse($record->isNewRecord);
 
         $fileContent = $record->getFileContent();
@@ -167,7 +167,7 @@ class ActiveRecordTest extends TestCase
 
         $record->save();
 
-        $this->assertTrue($record->_id instanceof \MongoId);
+        $this->assertTrue($record->_id instanceof \RethinkId);
         $this->assertFalse($record->isNewRecord);
 
         $fileContent = $record->getFileContent();
@@ -188,7 +188,7 @@ class ActiveRecordTest extends TestCase
 
         $record->save();
 
-        $this->assertTrue($record->_id instanceof \MongoId);
+        $this->assertTrue($record->_id instanceof \RethinkId);
         $this->assertFalse($record->isNewRecord);
 
         $fileContent = $record->getFileContent();

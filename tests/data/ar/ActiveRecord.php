@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\data\ar;
+namespace yiiunit\extensions\rethinkdb\data\ar;
 
 /**
- * Test Mongo ActiveRecord
+ * Test Rethink ActiveRecord
  */
-class ActiveRecord extends \yii\mongodb\ActiveRecord
+class ActiveRecord extends \yii\rethinkdb\ActiveRecord
 {
     public static $db;
 

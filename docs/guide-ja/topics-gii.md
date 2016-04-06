@@ -13,8 +13,8 @@ return [
         'gii' => [
             'class' => 'yii\gii\Module',
             'generators' => [
-                'mongoDbModel' => [
-                    'class' => 'yii\mongodb\gii\model\Generator'
+                'rethinkDbModel' => [
+                    'class' => 'yii\rethinkdb\gii\model\Generator'
                 ]
             ],
         ],
@@ -22,5 +22,5 @@ return [
 ];
 ```
 
-> Note: MongoDB はスキーマレスであるため、生成されるコードの基礎として使えるような情報が十分にはありません。
+> Note: RethinkDB はスキーマレスであるため、生成されるコードの基礎として使えるような情報が十分にはありません。
   従って、生成されるコードは非常に基本的なものとなり、修正が必要であることは確実です。

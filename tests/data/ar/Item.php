@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\data\ar;
+namespace yiiunit\extensions\rethinkdb\data\ar;
 
 class Item extends ActiveRecord
 {

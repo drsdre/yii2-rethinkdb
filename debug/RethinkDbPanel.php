@@ -5,25 +5,25 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb\debug;
+namespace yii\rethinkdb\debug;
 
 use yii\debug\panels\DbPanel;
 use yii\log\Logger;
 
 /**
- * MongoDbPanel panel that collects and displays MongoDB queries performed.
+ * RethinkDbPanel panel that collects and displays RethinkDB queries performed.
  *
  * @author Klimov Paul <klimov@zfort.com>
  * @since 2.0.1
  */
-class MongoDbPanel extends DbPanel
+class RethinkDbPanel extends DbPanel
 {
     /**
      * @inheritdoc
      */
     public function getName()
     {
-        return 'MongoDB';
+        return 'RethinkDB';
     }
 
     /**
@@ -31,7 +31,7 @@ class MongoDbPanel extends DbPanel
      */
     public function getSummaryName()
     {
-        return 'MongoDB';
+        return 'RethinkDB';
     }
 
     /**
@@ -43,9 +43,9 @@ class MongoDbPanel extends DbPanel
         $target = $this->module->logTarget;
 
         return $target->filterMessages($target->messages, Logger::LEVEL_PROFILE, [
-            'yii\mongodb\Collection::*',
-            'yii\mongodb\Query::*',
-            'yii\mongodb\Database::*',
+            'yii\rethinkdb\Collection::*',
+            'yii\rethinkdb\Query::*',
+            'yii\rethinkdb\Database::*',
         ]);
     }
 } 

@@ -1,28 +1,32 @@
 {
-    "name": "yiisoft/yii2-mongodb",
-    "description": "MongoDb extension for the Yii framework",
-    "keywords": ["yii2", "mongo", "mongodb", "active-record"],
+    "name": "yiisoft/yii2-rethinkdb",
+    "description": "RethinkDb extension for the Yii framework",
+    "keywords": ["yii2", "rethink", "rethinkdb", "active-record"],
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/yiisoft/yii2-mongodb/issues",
+        "issues": "https://github.com/drsdre/yii2-rethinkdb/issues",
         "forum": "http://www.yiiframework.com/forum/",
         "wiki": "http://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/yiisoft/yii2-mongodb"
+        "source": "https://github.com/drsdre/yii2-rethinkdb"
     },
     "authors": [
         {
             "name": "Paul Klimov",
             "email": "klimov.paul@gmail.com"
+        },
+        {
+            "name": "Andre Schuurman",
+            "email": "andre.schuurman@gmail.com"
         }
     ],
     "require": {
         "yiisoft/yii2": ">=2.0.5",
-        "ext-mongo": ">=1.5.0"
+        "danielmewes/php-rql": ">=2.2.0"
     },
     "autoload": {
-        "psr-4": { "yii\\mongodb\\": "" }
+        "psr-4": { "yii\\rethinkdb\\": "" }
     },
     "extra": {
         "branch-alias": {

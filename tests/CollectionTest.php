@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class CollectionTest extends TestCase
 {
@@ -21,14 +21,14 @@ class CollectionTest extends TestCase
         $collectionName = 'customer';
         $collection = $this->getConnection()->getCollection($collectionName);
         $this->assertEquals($collectionName, $collection->getName());
-        $this->assertEquals($this->mongoDbConfig['defaultDatabaseName'] . '.' . $collectionName, $collection->getFullName());
+        $this->assertEquals($this->rethinkDbConfig['defaultDatabaseName'] . '.' . $collectionName, $collection->getFullName());
     }
 
     public function testFind()
     {
         $collection = $this->getConnection()->getCollection('customer');
         $cursor = $collection->find();
-        $this->assertTrue($cursor instanceof \MongoCursor);
+        $this->assertTrue($cursor instanceof \RethinkCursor);
     }
 
     public function testInsert()
@@ -39,7 +39,7 @@ class CollectionTest extends TestCase
             'address' => 'customer 1 address',
         ];
         $id = $collection->insert($data);
-        $this->assertTrue($id instanceof \MongoId);
+        $this->assertTrue($id instanceof \RethinkId);
         $this->assertNotEmpty($id->__toString());
     }
 
@@ -82,8 +82,8 @@ class CollectionTest extends TestCase
             ],
         ];
         $insertedRows = $collection->batchInsert($rows);
-        $this->assertTrue($insertedRows[0]['_id'] instanceof \MongoId);
-        $this->assertTrue($insertedRows[1]['_id'] instanceof \MongoId);
+        $this->assertTrue($insertedRows[0]['_id'] instanceof \RethinkId);
+        $this->assertTrue($insertedRows[1]['_id'] instanceof \RethinkId);
         $this->assertEquals(count($rows), $collection->find()->count());
     }
 
@@ -95,7 +95,7 @@ class CollectionTest extends TestCase
             'address' => 'customer 1 address',
         ];
         $id = $collection->save($data);
-        $this->assertTrue($id instanceof \MongoId);
+        $this->assertTrue($id instanceof \RethinkId);
         $this->assertNotEmpty($id->__toString());
     }
 
@@ -237,7 +237,7 @@ class CollectionTest extends TestCase
         $this->assertTrue(!isset($result['status']));
 
         // Test exceptions
-        $this->setExpectedException('\yii\mongodb\Exception');
+        $this->setExpectedException('\yii\rethinkdb\Exception');
         $collection->findAndModify(['name' => 'customer 1'], ['$wrongOperator' => ['status' => 1]]);
     }
 
@@ -348,10 +348,10 @@ class CollectionTest extends TestCase
         $collection = $this->getConnection()->getCollection('customer');
         $columns = [
             'name',
-            'status' => \MongoCollection::DESCENDING,
+            'status' => \RethinkCollection::DESCENDING,
         ];
         $this->assertTrue($collection->createIndex($columns));
-        $indexInfo = $collection->mongoCollection->getIndexInfo();
+        $indexInfo = $collection->rethinkCollection->getIndexInfo();
         $this->assertEquals(2, count($indexInfo));
     }
 
@@ -364,10 +364,10 @@ class CollectionTest extends TestCase
 
         $collection->createIndex('name');
         $this->assertTrue($collection->dropIndex('name'));
-        $indexInfo = $collection->mongoCollection->getIndexInfo();
+        $indexInfo = $collection->rethinkCollection->getIndexInfo();
         $this->assertEquals(1, count($indexInfo));
 
-        $this->setExpectedException('\yii\mongodb\Exception');
+        $this->setExpectedException('\yii\rethinkdb\Exception');
         $collection->dropIndex('name');
     }
 
@@ -379,7 +379,7 @@ class CollectionTest extends TestCase
         $collection = $this->getConnection()->getCollection('customer');
         $collection->createIndex('name');
         $this->assertEquals(2, $collection->dropAllIndexes());
-        $indexInfo = $collection->mongoCollection->getIndexInfo();
+        $indexInfo = $collection->rethinkCollection->getIndexInfo();
         $this->assertEquals(1, count($indexInfo));
     }
 
@@ -391,7 +391,7 @@ class CollectionTest extends TestCase
     {
         $serverVersion = $this->getServerVersion();
         if (version_compare('2.4', $serverVersion, '<') || version_compare('3.0', $serverVersion, '>=')) {
-            $this->markTestSkipped("Mongo Server >=2.4 and <3.0 required.");
+            $this->markTestSkipped("Rethink Server >=2.4 and <3.0 required.");
         }
 
         $collection = $this->getConnection()->getCollection('customer');
@@ -436,12 +436,12 @@ class CollectionTest extends TestCase
         $id = $collection->insert($data);
 
         $cursor = $collection->find(['_id' => (string) $id]);
-        $this->assertTrue($cursor instanceof \MongoCursor);
+        $this->assertTrue($cursor instanceof \RethinkCursor);
         $row = $cursor->getNext();
         $this->assertEquals($id, $row['_id']);
 
         $cursor = $collection->find(['_id' => 'fake']);
-        $this->assertTrue($cursor instanceof \MongoCursor);
+        $this->assertTrue($cursor instanceof \RethinkCursor);
         $this->assertEquals(0, $cursor->count());
     }
 
@@ -450,7 +450,7 @@ class CollectionTest extends TestCase
      *
      * @see https://github.com/yiisoft/yii2/issues/2548
      */
-    public function testInsertMongoBin()
+    public function testInsertRethinkBin()
     {
         $collection = $this->getConnection()->getCollection('customer');
 
@@ -458,10 +458,10 @@ class CollectionTest extends TestCase
         $data = [
             'name' => 'customer 1',
             'address' => 'customer 1 address',
-            'binData' => new \MongoBinData(file_get_contents($fileName), 2),
+            'binData' => new \RethinkBinData(file_get_contents($fileName), 2),
         ];
         $id = $collection->insert($data);
-        $this->assertTrue($id instanceof \MongoId);
+        $this->assertTrue($id instanceof \RethinkId);
         $this->assertNotEmpty($id->__toString());
     }
 

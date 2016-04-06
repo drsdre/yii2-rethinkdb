@@ -5,14 +5,14 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb;
+namespace yii\rethinkdb;
 
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\test\BaseActiveFixture;
 
 /**
- * ActiveFixture represents a fixture backed up by a [[modelClass|MongoDB ActiveRecord class]] or a [[collectionName|MongoDB collection]].
+ * ActiveFixture represents a fixture backed up by a [[modelClass|RethinkDB ActiveRecord class]] or a [[collectionName|RethinkDB collection]].
  *
  * Either [[modelClass]] or [[collectionName]] must be set. You should also provide fixture data in the file
  * specified by [[dataFile]] or overriding [[getData()]] if you want to use code to generate the fixture data.
@@ -31,7 +31,7 @@ class ActiveFixture extends BaseActiveFixture
     /**
      * @var Connection|string the DB connection object or the application component ID of the DB connection.
      */
-    public $db = 'mongodb';
+    public $db = 'rethinkdb';
     /**
      * @var string|array the collection name that this fixture is about. If this property is not set,
      * the collection name will be determined via [[modelClass]].
@@ -53,7 +53,7 @@ class ActiveFixture extends BaseActiveFixture
 
     /**
      * Loads the fixture data.
-     * The default implementation will first reset the MongoDB collection and then populate it with the data
+     * The default implementation will first reset the RethinkDB collection and then populate it with the data
      * returned by [[getData()]].
      */
     public function load()

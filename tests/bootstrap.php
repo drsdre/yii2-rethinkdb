@@ -11,5 +11,5 @@ $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 require_once(__DIR__ . '/../vendor/autoload.php');
 require_once(__DIR__ . '/../vendor/yiisoft/yii2/Yii.php');
 
-Yii::setAlias('@yiiunit/extensions/mongodb', __DIR__);
-Yii::setAlias('@yii/mongodb', dirname(__DIR__));
+Yii::setAlias('@yiiunit/extensions/rethinkdb', __DIR__);
+Yii::setAlias('@yii/rethinkdb', dirname(__DIR__));

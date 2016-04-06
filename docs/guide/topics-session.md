@@ -2,7 +2,7 @@ Using the Session component
 ===========================
 
 To use the `Session` component, in addition to configuring the connection as described in [Installation](installation.md) section,
-you also have to configure the `session` component to be `yii\mongodb\Session`:
+you also have to configure the `session` component to be `yii\rethinkdb\Session`:
 
 ```php
 return [
@@ -10,7 +10,7 @@ return [
     'components' => [
         // ...
         'session' => [
-            'class' => 'yii\mongodb\Session',
+            'class' => 'yii\rethinkdb\Session',
         ],
     ]
 ];

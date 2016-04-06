@@ -1,14 +1,14 @@
 <?php
 
 /**
- * This is the configuration file for the 'yii2-mongodb' unit tests.
+ * This is the configuration file for the 'yii2-rethinkdb' unit tests.
  * You can override configuration values by creating a `config.local.php` file
  * and manipulate the `$config` variable.
  */
 
 $config = [
-    'mongodb' => [
-        'dsn' => 'mongodb://travis:test@localhost:27017',
+    'rethinkdb' => [
+        'dsn' => 'rethinkdb://travis:test@localhost:27017',
         'defaultDatabaseName' => 'yii2test',
         'options' => [],
     ]

@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\data\ar;
+namespace yiiunit\extensions\rethinkdb\data\ar;
 
-use yiiunit\extensions\mongodb\data\ar\file\CustomerFile;
+use yiiunit\extensions\rethinkdb\data\ar\file\CustomerFile;
 
 class Customer extends ActiveRecord
 {

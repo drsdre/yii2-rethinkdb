@@ -1,14 +1,14 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
 use yii\data\ActiveDataProvider;
-use yii\mongodb\Query;
-use yiiunit\extensions\mongodb\data\ar\ActiveRecord;
-use yiiunit\extensions\mongodb\data\ar\Customer;
+use yii\rethinkdb\Query;
+use yiiunit\extensions\rethinkdb\data\ar\ActiveRecord;
+use yiiunit\extensions\rethinkdb\data\ar\Customer;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class ActiveDataProviderTest extends TestCase
 {
@@ -78,7 +78,7 @@ class ActiveDataProviderTest extends TestCase
         $this->assertEquals(10, count($models));
         $this->assertTrue($models[0] instanceof Customer);
         $keys = $provider->getKeys();
-        $this->assertTrue($keys[0] instanceof \MongoId);
+        $this->assertTrue($keys[0] instanceof \RethinkId);
 
         $provider = new ActiveDataProvider([
             'query' => Customer::find(),

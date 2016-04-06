@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
-use yii\mongodb\Session;
+use yii\rethinkdb\Session;
 use Yii;
 
 class SessionTest extends TestCase

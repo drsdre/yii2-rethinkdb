@@ -4,5 +4,5 @@ These scripts might be used to configure your own system for test runs. But sinc
 
 The scripts are:
 
- - [`mongodb-setup.sh`](mongodb-setup.sh)
-   Enables Mongo DB PHP extension
+ - [`rethinkdb-setup.sh`](rethinkdb-setup.sh)
+   Enables Rethink DB PHP extension

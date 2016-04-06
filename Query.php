@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb;
+namespace yii\rethinkdb;
 
 use yii\base\Component;
 use yii\db\QueryInterface;
@@ -14,7 +14,7 @@ use yii\helpers\Json;
 use Yii;
 
 /**
- * Query represents Mongo "find" operation.
+ * Query represents Rethink "find" operation.
  *
  * Query provides a set of methods to facilitate the specification of "find" command.
  * These methods can be chained together.
@@ -55,21 +55,21 @@ class Query extends Component implements QueryInterface
     public $from;
     /**
      * @var array cursor options in format: optionKey => optionValue
-     * @see \MongoCursor::addOption()
+     * @see \RethinkCursor::addOption()
      * @see options()
      */
     public $options = [];
 
 
     /**
-     * Returns the Mongo collection for this query.
-     * @param Connection $db Mongo connection.
+     * Returns the Rethink collection for this query.
+     * @param Connection $db Rethink connection.
      * @return Collection collection instance.
      */
     public function getCollection($db = null)
     {
         if ($db === null) {
-            $db = Yii::$app->get('mongodb');
+            $db = Yii::$app->get('rethinkdb');
         }
 
         return $db->getCollection($this->from);
@@ -132,9 +132,9 @@ class Query extends Component implements QueryInterface
     }
 
     /**
-     * Builds the Mongo cursor for this query.
+     * Builds the Rethink cursor for this query.
      * @param Connection $db the database connection used to execute the query.
-     * @return \MongoCursor mongo cursor instance.
+     * @return \RethinkCursor rethink cursor instance.
      */
     protected function buildCursor($db = null)
     {
@@ -153,8 +153,8 @@ class Query extends Component implements QueryInterface
     }
 
     /**
-     * Fetches rows from the given Mongo cursor.
-     * @param \MongoCursor $cursor Mongo cursor instance to fetch data from.
+     * Fetches rows from the given Rethink cursor.
+     * @param \RethinkCursor $cursor Rethink cursor instance to fetch data from.
      * @param boolean $all whether to fetch all rows or only first one.
      * @param string|callable $indexBy the column name or PHP callback,
      * by which the query results should be indexed by.
@@ -178,7 +178,7 @@ class Query extends Component implements QueryInterface
     }
 
     /**
-     * @param \MongoCursor $cursor Mongo cursor instance to fetch data from.
+     * @param \RethinkCursor $cursor Rethink cursor instance to fetch data from.
      * @param boolean $all whether to fetch all rows or only first one.
      * @param string|callable $indexBy value to index by.
      * @return array|boolean result.
@@ -204,8 +204,8 @@ class Query extends Component implements QueryInterface
 
     /**
      * Executes the query and returns all results as an array.
-     * @param Connection $db the Mongo connection used to execute the query.
-     * If this parameter is not given, the `mongodb` application component will be used.
+     * @param Connection $db the Rethink connection used to execute the query.
+     * If this parameter is not given, the `rethinkdb` application component will be used.
      * @return array the query results. If the query results in nothing, an empty array will be returned.
      */
     public function all($db = null)
@@ -241,8 +241,8 @@ class Query extends Component implements QueryInterface
 
     /**
      * Executes the query and returns a single row of result.
-     * @param Connection $db the Mongo connection used to execute the query.
-     * If this parameter is not given, the `mongodb` application component will be used.
+     * @param Connection $db the Rethink connection used to execute the query.
+     * If this parameter is not given, the `rethinkdb` application component will be used.
      * @return array|boolean the first row (in terms of an array) of the query result. False is returned if the query
      * results in nothing.
      */
@@ -256,7 +256,7 @@ class Query extends Component implements QueryInterface
      * Performs 'findAndModify' query and returns a single row of result.
      * @param array $update update criteria
      * @param array $options list of options in format: optionName => optionValue.
-     * @param Connection $db the Mongo connection used to execute the query.
+     * @param Connection $db the Rethink connection used to execute the query.
      * @return array|null the original document, or the modified document when $options['new'] is set.
      */
     public function modify($update, $options = [], $db = null)
@@ -272,8 +272,8 @@ class Query extends Component implements QueryInterface
     /**
      * Returns the number of records.
      * @param string $q kept to match [[QueryInterface]], its value is ignored.
-     * @param Connection $db the Mongo connection used to execute the query.
-     * If this parameter is not given, the `mongodb` application component will be used.
+     * @param Connection $db the Rethink connection used to execute the query.
+     * If this parameter is not given, the `rethinkdb` application component will be used.
      * @return integer number of records
      * @throws Exception on failure.
      */
@@ -296,8 +296,8 @@ class Query extends Component implements QueryInterface
 
     /**
      * Returns a value indicating whether the query result contains any row of data.
-     * @param Connection $db the Mongo connection used to execute the query.
-     * If this parameter is not given, the `mongodb` application component will be used.
+     * @param Connection $db the Rethink connection used to execute the query.
+     * If this parameter is not given, the `rethinkdb` application component will be used.
      * @return boolean whether the query result contains any row of data.
      */
     public function exists($db = null)
@@ -309,8 +309,8 @@ class Query extends Component implements QueryInterface
      * Returns the sum of the specified column values.
      * @param string $q the column name.
      * Make sure you properly quote column names in the expression.
-     * @param Connection $db the Mongo connection used to execute the query.
-     * If this parameter is not given, the `mongodb` application component will be used.
+     * @param Connection $db the Rethink connection used to execute the query.
+     * If this parameter is not given, the `rethinkdb` application component will be used.
      * @return integer the sum of the specified column values
      */
     public function sum($q, $db = null)
@@ -322,8 +322,8 @@ class Query extends Component implements QueryInterface
      * Returns the average of the specified column values.
      * @param string $q the column name.
      * Make sure you properly quote column names in the expression.
-     * @param Connection $db the Mongo connection used to execute the query.
-     * If this parameter is not given, the `mongodb` application component will be used.
+     * @param Connection $db the Rethink connection used to execute the query.
+     * If this parameter is not given, the `rethinkdb` application component will be used.
      * @return integer the average of the specified column values.
      */
     public function average($q, $db = null)
@@ -348,8 +348,8 @@ class Query extends Component implements QueryInterface
      * Returns the maximum of the specified column values.
      * @param string $q the column name.
      * Make sure you properly quote column names in the expression.
-     * @param Connection $db the Mongo connection used to execute the query.
-     * If this parameter is not given, the `mongodb` application component will be used.
+     * @param Connection $db the Rethink connection used to execute the query.
+     * If this parameter is not given, the `rethinkdb` application component will be used.
      * @return integer the maximum of the specified column values.
      */
     public function max($q, $db = null)
@@ -390,8 +390,8 @@ class Query extends Component implements QueryInterface
     /**
      * Returns a list of distinct values for the given column across a collection.
      * @param string $q column to use.
-     * @param Connection $db the Mongo connection used to execute the query.
-     * If this parameter is not given, the `mongodb` application component will be used.
+     * @param Connection $db the Rethink connection used to execute the query.
+     * If this parameter is not given, the `rethinkdb` application component will be used.
      * @return array array of distinct values
      */
     public function distinct($q, $db = null)
@@ -452,10 +452,10 @@ class Query extends Component implements QueryInterface
         foreach ($this->orderBy as $fieldName => $sortOrder) {
             switch ($sortOrder) {
                 case SORT_ASC:
-                    $sort[$fieldName] = \MongoCollection::ASCENDING;
+                    $sort[$fieldName] = \RethinkCollection::ASCENDING;
                     break;
                 case SORT_DESC:
-                    $sort[$fieldName] = \MongoCollection::DESCENDING;
+                    $sort[$fieldName] = \RethinkCollection::DESCENDING;
                     break;
                 default:
                     $sort[$fieldName] = $sortOrder;

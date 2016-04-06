@@ -1,10 +1,10 @@
 マイグレーションを使用する
 ==========================
 
-MongoDB はスキーマレスであり、欠落しているコレクションはすべて最初に要求されたときに作成されます。
-しかし、MongoDB データベースに永続的な変更を適用する必要があることはよくあります。
+RethinkDB はスキーマレスであり、欠落しているコレクションはすべて最初に要求されたときに作成されます。
+しかし、RethinkDB データベースに永続的な変更を適用する必要があることはよくあります。
 例えば、何らかの特定のオプションを指定してコレクションを作成したり、インデックスを作成したりする場合です。
-MongoDB のマイグレーションは [[yii\mongodb\console\controllers\MigrateController]] によって管理されます。
+RethinkDB のマイグレーションは [[yii\rethinkdb\console\controllers\MigrateController]] によって管理されます。
 これは通常の [[\yii\console\controllers\MigrateController]] に類似したものです。
 
 このコマンドを有効にするためには、コンソールアプリケーションの構成を次のように修正しなければなりません。
@@ -13,7 +13,7 @@ MongoDB のマイグレーションは [[yii\mongodb\console\controllers\Migrate
 return [
     // ...
     'controllerMap' => [
-        'mongodb-migrate' => 'yii\mongodb\console\controllers\MigrateController'
+        'rethinkdb-migrate' => 'yii\rethinkdb\console\controllers\MigrateController'
     ],
 ];
 ```
@@ -22,11 +22,11 @@ return [
 
 ```
 # 'create_user_collection' という名前の新しいマイグレーションを作成する
-yii mongodb-migrate/create create_user_collection
+yii rethinkdb-migrate/create create_user_collection
 
 # 全ての新しいマイグレーションを適用する
-yii mongodb-migrate
+yii rethinkdb-migrate
 
 # 最後に適用されたマイグレーションを取り消す
-yii mongodb-migrate/down
+yii rethinkdb-migrate/down
 ```

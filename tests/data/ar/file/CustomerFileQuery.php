@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\data\ar\file;
+namespace yiiunit\extensions\rethinkdb\data\ar\file;
 
-use yii\mongodb\file\ActiveQuery;
+use yii\rethinkdb\file\ActiveQuery;
 
 /**
  * CustomerFileQuery

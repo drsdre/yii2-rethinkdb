@@ -12,8 +12,8 @@ return [
         'gii' => [
             'class' => 'yii\gii\Module',
             'generators' => [
-                'mongoDbModel' => [
-                    'class' => 'yii\mongodb\gii\model\Generator'
+                'rethinkDbModel' => [
+                    'class' => 'yii\rethinkdb\gii\model\Generator'
                 ]
             ],
         ],
@@ -21,6 +21,6 @@ return [
 ];
 ```
 
-> Note: since MongoDB is schemaless, there is not much information, which generated code may base on. So generated code
+> Note: since RethinkDB is schemaless, there is not much information, which generated code may base on. So generated code
   is very basic and definitely requires adjustments.
 

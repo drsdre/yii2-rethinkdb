@@ -3,7 +3,7 @@
 
 ## 必要条件
 
-このエクステンションは [MongoDB PHP 拡張](http://us1.php.net/manual/en/book.mongo.php) バージョン 1.5.0 以降を必要とします。
+このエクステンションは [RethinkDB PHP 拡張](http://us1.php.net/manual/en/book.rethink.php) バージョン 1.5.0 以降を必要とします。
 
 ## Composer パッケージを取得する
 
@@ -12,13 +12,13 @@
 下記のコマンドを実行してください。
 
 ```
-php composer.phar require --prefer-dist yiisoft/yii2-mongodb
+php composer.phar require --prefer-dist yiisoft/yii2-rethinkdb
 ```
 
 または、あなたの `composer.json` ファイルの `require` セクションに、下記を追加してください。
 
 ```
-"yiisoft/yii2-mongodb": "~2.0.0"
+"yiisoft/yii2-rethinkdb": "~2.0.0"
 ```
 
 ## アプリケーションを構成する
@@ -29,9 +29,9 @@ php composer.phar require --prefer-dist yiisoft/yii2-mongodb
 return [
     //....
     'components' => [
-        'mongodb' => [
-            'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://developer:password@localhost:27017/mydatabase',
+        'rethinkdb' => [
+            'class' => '\yii\rethinkdb\Connection',
+            'dsn' => 'rethinkdb://developer:password@localhost:27017/mydatabase',
         ],
     ],
 ];

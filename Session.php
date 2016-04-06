@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb;
+namespace yii\rethinkdb;
 
 use Yii;
 use yii\base\ErrorHandler;
@@ -14,7 +14,7 @@ use yii\di\Instance;
 use yii\web\MultiFieldSession;
 
 /**
- * Session extends [[\yii\web\Session]] by using MongoDB as session data storage.
+ * Session extends [[\yii\web\Session]] by using RethinkDB as session data storage.
  *
  * By default, Session stores session data in a collection named 'session' inside the default database.
  * This collection is better to be pre-created with fields 'id' and 'expire' indexed.
@@ -25,8 +25,8 @@ use yii\web\MultiFieldSession;
  *
  * ~~~
  * 'session' => [
- *     'class' => 'yii\mongodb\Session',
- *     // 'db' => 'mymongodb',
+ *     'class' => 'yii\rethinkdb\Session',
+ *     // 'db' => 'myrethinkdb',
  *     // 'sessionCollection' => 'my_session',
  * ]
  * ~~~
@@ -42,14 +42,14 @@ use yii\web\MultiFieldSession;
 class Session extends MultiFieldSession
 {
     /**
-     * @var Connection|array|string the MongoDB connection object or the application component ID of the MongoDB connection.
+     * @var Connection|array|string the RethinkDB connection object or the application component ID of the RethinkDB connection.
      * After the Session object is created, if you want to change this property, you should only assign it
-     * with a MongoDB connection object.
+     * with a RethinkDB connection object.
      * Starting from version 2.0.2, this can also be a configuration array for creating the object.
      */
-    public $db = 'mongodb';
+    public $db = 'rethinkdb';
     /**
-     * @var string|array the name of the MongoDB collection that stores the session data.
+     * @var string|array the name of the RethinkDB collection that stores the session data.
      * Please refer to [[Connection::getCollection()]] on how to specify this parameter.
      * This collection is better to be pre-created with fields 'id' and 'expire' indexed.
      */
@@ -58,7 +58,7 @@ class Session extends MultiFieldSession
 
     /**
      * Initializes the Session component.
-     * This method will initialize the [[db]] property to make sure it refers to a valid MongoDB connection.
+     * This method will initialize the [[db]] property to make sure it refers to a valid RethinkDB connection.
      * @throws InvalidConfigException if [[db]] is invalid.
      */
     public function init()

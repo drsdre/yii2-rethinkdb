@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
 use Yii;
-use yii\mongodb\Cache;
+use yii\rethinkdb\Cache;
 
 class CacheTest extends TestCase
 {

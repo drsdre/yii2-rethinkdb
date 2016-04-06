@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\file;
+namespace yiiunit\extensions\rethinkdb\file;
 
-use yii\mongodb\file\Query;
-use yiiunit\extensions\mongodb\TestCase;
+use yii\rethinkdb\file\Query;
+use yiiunit\extensions\rethinkdb\TestCase;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class QueryTest extends TestCase
 {
@@ -52,7 +52,7 @@ class QueryTest extends TestCase
         $query = new Query;
         $row = $query->from('fs')->one($connection);
         $this->assertTrue(is_array($row));
-        $this->assertTrue($row['file'] instanceof \MongoGridFSFile);
+        $this->assertTrue($row['file'] instanceof \RethinkGridFSFile);
     }
 
     public function testDirectMatch()
@@ -63,7 +63,7 @@ class QueryTest extends TestCase
             ->where(['file_index' => 5])
             ->all($connection);
         $this->assertEquals(1, count($rows));
-        /* @var $file \MongoGridFSFile */
+        /* @var $file \RethinkGridFSFile */
         $file = $rows[0];
         $this->assertEquals('name5', $file['filename']);
     }

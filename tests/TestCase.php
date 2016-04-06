@@ -1,45 +1,45 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
 use yii\helpers\ArrayHelper;
-use yii\mongodb\Connection;
+use yii\rethinkdb\Connection;
 use Yii;
-use yii\mongodb\Exception;
+use yii\rethinkdb\Exception;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     public static $params;
     /**
-     * @var array Mongo connection configuration.
+     * @var array Rethink connection configuration.
      */
-    protected $mongoDbConfig = [
-        'dsn' => 'mongodb://localhost:27017',
+    protected $rethinkDbConfig = [
+        'dsn' => 'rethinkdb://localhost:27017',
         'defaultDatabaseName' => 'yii2test',
         'options' => [],
     ];
     /**
-     * @var Connection Mongo connection instance.
+     * @var Connection Rethink connection instance.
      */
-    protected $mongodb;
+    protected $rethinkdb;
 
     protected function setUp()
     {
         parent::setUp();
-        if (!extension_loaded('mongo')) {
-            $this->markTestSkipped('mongo extension required.');
+        if (!extension_loaded('rethink')) {
+            $this->markTestSkipped('rethink extension required.');
         }
-        $config = self::getParam('mongodb');
+        $config = self::getParam('rethinkdb');
         if (!empty($config)) {
-            $this->mongoDbConfig = $config;
+            $this->rethinkDbConfig = $config;
         }
         //$this->mockApplication();
     }
 
     protected function tearDown()
     {
-        if ($this->mongodb) {
-            $this->mongodb->close();
+        if ($this->rethinkdb) {
+            $this->rethinkdb->close();
         }
         $this->destroyApplication();
     }
@@ -94,23 +94,23 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @param  boolean                 $reset whether to clean up the test database
      * @param  boolean                 $open  whether to open test database
-     * @return \yii\mongodb\Connection
+     * @return \yii\rethinkdb\Connection
      */
     public function getConnection($reset = false, $open = true)
     {
-        if (!$reset && $this->mongodb) {
-            return $this->mongodb;
+        if (!$reset && $this->rethinkdb) {
+            return $this->rethinkdb;
         }
         $db = new Connection();
-        $db->dsn = $this->mongoDbConfig['dsn'];
-        $db->defaultDatabaseName = $this->mongoDbConfig['defaultDatabaseName'];
-        if (isset($this->mongoDbConfig['options'])) {
-            $db->options = $this->mongoDbConfig['options'];
+        $db->dsn = $this->rethinkDbConfig['dsn'];
+        $db->defaultDatabaseName = $this->rethinkDbConfig['defaultDatabaseName'];
+        if (isset($this->rethinkDbConfig['options'])) {
+            $db->options = $this->rethinkDbConfig['options'];
         }
         if ($open) {
             $db->open();
         }
-        $this->mongodb = $db;
+        $this->rethinkdb = $db;
 
         return $db;
     }
@@ -121,9 +121,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function dropCollection($name)
     {
-        if ($this->mongodb) {
+        if ($this->rethinkdb) {
             try {
-                $this->mongodb->getCollection($name)->drop();
+                $this->rethinkdb->getCollection($name)->drop();
             } catch (Exception $e) {
                 // shut down exception
             }
@@ -136,9 +136,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function dropFileCollection($name = 'fs')
     {
-        if ($this->mongodb) {
+        if ($this->rethinkdb) {
             try {
-                $this->mongodb->getFileCollection($name)->drop();
+                $this->rethinkdb->getFileCollection($name)->drop();
             } catch (Exception $e) {
                 // shut down exception
             }
@@ -147,7 +147,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * Finds all records in collection.
-     * @param  \yii\mongodb\Collection $collection
+     * @param  \yii\rethinkdb\Collection $collection
      * @param  array                   $condition
      * @param  array                   $fields
      * @return array                   rows
@@ -164,8 +164,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Returns the Mongo server version.
-     * @return string Mongo server version.
+     * Returns the Rethink server version.
+     * @return string Rethink server version.
      */
     protected function getServerVersion()
     {

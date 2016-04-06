@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb;
+namespace yii\rethinkdb;
 
 use Yii;
 use yii\base\InvalidConfigException;
@@ -15,7 +15,7 @@ use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
 /**
- * ActiveRecord is the base class for classes representing Mongo documents in terms of objects.
+ * ActiveRecord is the base class for classes representing Rethink documents in terms of objects.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0
@@ -23,14 +23,14 @@ use yii\helpers\StringHelper;
 abstract class ActiveRecord extends BaseActiveRecord
 {
     /**
-     * Returns the Mongo connection used by this AR class.
-     * By default, the "mongodb" application component is used as the Mongo connection.
+     * Returns the Rethink connection used by this AR class.
+     * By default, the "rethinkdb" application component is used as the Rethink connection.
      * You may override this method if you want to use a different database connection.
      * @return Connection the database connection used by this AR class.
      */
     public static function getDb()
     {
-        return \Yii::$app->get('mongodb');
+        return \Yii::$app->get('rethinkdb');
     }
 
     /**
@@ -102,7 +102,7 @@ abstract class ActiveRecord extends BaseActiveRecord
     }
 
     /**
-     * Declares the name of the Mongo collection associated with this AR class.
+     * Declares the name of the Rethink collection associated with this AR class.
      *
      * Collection name can be either a string or array:
      *  - if string considered as the name of the collection inside the default database.
@@ -120,7 +120,7 @@ abstract class ActiveRecord extends BaseActiveRecord
     }
 
     /**
-     * Return the Mongo collection instance for this AR class.
+     * Return the Rethink collection instance for this AR class.
      * @return Collection collection instance.
      */
     public static function getCollection()
@@ -134,7 +134,7 @@ abstract class ActiveRecord extends BaseActiveRecord
      *
      * Note that an array should be returned even for a collection with single primary key.
      *
-     * @return string[] the primary keys of the associated Mongo collection.
+     * @return string[] the primary keys of the associated Rethink collection.
      */
     public static function primaryKey()
     {
@@ -159,11 +159,11 @@ abstract class ActiveRecord extends BaseActiveRecord
      */
     public function attributes()
     {
-        throw new InvalidConfigException('The attributes() method of mongodb ActiveRecord has to be implemented by child classes.');
+        throw new InvalidConfigException('The attributes() method of rethinkdb ActiveRecord has to be implemented by child classes.');
     }
 
     /**
-     * Inserts a row into the associated Mongo collection using the attribute values of this record.
+     * Inserts a row into the associated Rethink collection using the attribute values of this record.
      *
      * This method performs the following steps in order:
      *
@@ -339,7 +339,7 @@ abstract class ActiveRecord extends BaseActiveRecord
      * The comparison is made by comparing the collection names and the primary key values of the two active records.
      * If one of the records [[isNewRecord|is new]] they are also considered not equal.
      * @param ActiveRecord $record record to compare to
-     * @return boolean whether the two active records refer to the same row in the same Mongo collection.
+     * @return boolean whether the two active records refer to the same row in the same Rethink collection.
      */
     public function equals($record)
     {

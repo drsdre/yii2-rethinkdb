@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\file;
+namespace yiiunit\extensions\rethinkdb\file;
 
-use yiiunit\extensions\mongodb\TestCase;
+use yiiunit\extensions\rethinkdb\TestCase;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class CollectionTest extends TestCase
 {
@@ -21,15 +21,15 @@ class CollectionTest extends TestCase
     {
         $collection = $this->getConnection()->getFileCollection();
         $chunkCollection = $collection->getChunkCollection();
-        $this->assertTrue($chunkCollection instanceof \yii\mongodb\Collection);
-        $this->assertTrue($chunkCollection->mongoCollection instanceof \MongoCollection);
+        $this->assertTrue($chunkCollection instanceof \yii\rethinkdb\Collection);
+        $this->assertTrue($chunkCollection->rethinkCollection instanceof \RethinkCollection);
     }
 
     public function testFind()
     {
         $collection = $this->getConnection()->getFileCollection();
         $cursor = $collection->find();
-        $this->assertTrue($cursor instanceof \MongoGridFSCursor);
+        $this->assertTrue($cursor instanceof \RethinkGridFSCursor);
     }
 
     public function testInsertFile()
@@ -38,12 +38,12 @@ class CollectionTest extends TestCase
 
         $filename = __FILE__;
         $id = $collection->insertFile($filename);
-        $this->assertTrue($id instanceof \MongoId);
+        $this->assertTrue($id instanceof \RethinkId);
 
         $files = $this->findAll($collection);
         $this->assertEquals(1, count($files));
 
-        /* @var $file \MongoGridFSFile */
+        /* @var $file \RethinkGridFSFile */
         $file = $files[0];
         $this->assertEquals($filename, $file->getFilename());
         $this->assertEquals(file_get_contents($filename), $file->getBytes());
@@ -55,12 +55,12 @@ class CollectionTest extends TestCase
 
         $bytes = 'Test file content';
         $id = $collection->insertFileContent($bytes);
-        $this->assertTrue($id instanceof \MongoId);
+        $this->assertTrue($id instanceof \RethinkId);
 
         $files = $this->findAll($collection);
         $this->assertEquals(1, count($files));
 
-        /* @var $file \MongoGridFSFile */
+        /* @var $file \RethinkGridFSFile */
         $file = $files[0];
         $this->assertEquals($bytes, $file->getBytes());
     }
@@ -76,7 +76,7 @@ class CollectionTest extends TestCase
         $id = $collection->insertFileContent($bytes);
 
         $file = $collection->get($id);
-        $this->assertTrue($file instanceof \MongoGridFSFile);
+        $this->assertTrue($file instanceof \RethinkGridFSFile);
         $this->assertEquals($bytes, $file->getBytes());
     }
 

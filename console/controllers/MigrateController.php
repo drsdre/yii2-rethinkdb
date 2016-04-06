@@ -5,24 +5,24 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb\console\controllers;
+namespace yii\rethinkdb\console\controllers;
 
 use Yii;
 use yii\console\controllers\BaseMigrateController;
 use yii\console\Exception;
-use yii\mongodb\Connection;
-use yii\mongodb\Query;
+use yii\rethinkdb\Connection;
+use yii\rethinkdb\Query;
 use yii\helpers\ArrayHelper;
 
 /**
- * Manages application MongoDB migrations.
+ * Manages application RethinkDB migrations.
  *
- * This is an analog of [[\yii\console\controllers\MigrateController]] for MongoDB.
+ * This is an analog of [[\yii\console\controllers\MigrateController]] for RethinkDB.
  *
  * This command provides support for tracking the migration history, upgrading
  * or downloading with migrations, and creating new migration skeletons.
  *
- * The migration history is stored in a MongoDB collection named
+ * The migration history is stored in a RethinkDB collection named
  * as [[migrationCollection]]. This collection will be automatically created the first time
  * this command is executed, if it does not exist.
  *
@@ -32,7 +32,7 @@ use yii\helpers\ArrayHelper;
  * return [
  *     // ...
  *     'controllerMap' => [
- *         'mongodb-migrate' => 'yii\mongodb\console\controllers\MigrateController'
+ *         'rethinkdb-migrate' => 'yii\rethinkdb\console\controllers\MigrateController'
  *     ],
  * ];
  * ~~~
@@ -41,13 +41,13 @@ use yii\helpers\ArrayHelper;
  *
  * ~~~
  * # creates a new migration named 'create_user_collection'
- * yii mongodb-migrate/create create_user_collection
+ * yii rethinkdb-migrate/create create_user_collection
  *
  * # applies ALL new migrations
- * yii mongodb-migrate
+ * yii rethinkdb-migrate
  *
  * # reverts the last applied migration
- * yii mongodb-migrate/down
+ * yii rethinkdb-migrate/down
  * ~~~
  *
  * @author Klimov Paul <klimov@zfort.com>
@@ -62,12 +62,12 @@ class MigrateController extends BaseMigrateController
     /**
      * @inheritdoc
      */
-    public $templateFile = '@yii/mongodb/views/migration.php';
+    public $templateFile = '@yii/rethinkdb/views/migration.php';
     /**
      * @var Connection|string the DB connection object or the application
      * component ID of the DB connection.
      */
-    public $db = 'mongodb';
+    public $db = 'rethinkdb';
 
 
     /**
@@ -96,7 +96,7 @@ class MigrateController extends BaseMigrateController
                     $this->db = Yii::$app->get($this->db);
                 }
                 if (!$this->db instanceof Connection) {
-                    throw new Exception("The 'db' option must refer to the application component ID of a MongoDB connection.");
+                    throw new Exception("The 'db' option must refer to the application component ID of a RethinkDB connection.");
                 }
             }
             return true;
@@ -108,7 +108,7 @@ class MigrateController extends BaseMigrateController
     /**
      * Creates a new migration instance.
      * @param string $class the migration class name
-     * @return \yii\mongodb\Migration the migration instance
+     * @return \yii\rethinkdb\Migration the migration instance
      */
     protected function createMigration($class)
     {

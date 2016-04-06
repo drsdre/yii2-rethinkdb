@@ -5,47 +5,47 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb\file;
+namespace yii\rethinkdb\file;
 
-use yii\mongodb\Exception;
+use yii\rethinkdb\Exception;
 use Yii;
 
 /**
- * Collection represents the Mongo GridFS collection information.
+ * Collection represents the Rethink GridFS collection information.
  *
  * A file collection object is usually created by calling [[Database::getFileCollection()]] or [[Connection::getFileCollection()]].
  *
- * File collection inherits all interface from regular [[\yii\mongo\Collection]], adding methods to store files.
+ * File collection inherits all interface from regular [[\yii\rethink\Collection]], adding methods to store files.
  *
- * @property \yii\mongodb\Collection $chunkCollection Mongo collection instance. This property is read-only.
+ * @property \yii\rethinkdb\Collection $chunkCollection Rethink collection instance. This property is read-only.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0
  */
-class Collection extends \yii\mongodb\Collection
+class Collection extends \yii\rethinkdb\Collection
 {
     /**
-     * @var \MongoGridFS Mongo GridFS collection instance.
+     * @var \RethinkGridFS Rethink GridFS collection instance.
      */
-    public $mongoCollection;
+    public $rethinkCollection;
 
     /**
-     * @var \yii\mongodb\Collection file chunks Mongo collection.
+     * @var \yii\rethinkdb\Collection file chunks Rethink collection.
      */
     private $_chunkCollection;
 
 
     /**
-     * Returns the Mongo collection for the file chunks.
+     * Returns the Rethink collection for the file chunks.
      * @param boolean $refresh whether to reload the collection instance even if it is found in the cache.
-     * @return \yii\mongodb\Collection mongo collection instance.
+     * @return \yii\rethinkdb\Collection rethink collection instance.
      */
     public function getChunkCollection($refresh = false)
     {
         if ($refresh || !is_object($this->_chunkCollection)) {
             $this->_chunkCollection = Yii::createObject([
-                'class' => 'yii\mongodb\Collection',
-                'mongoCollection' => $this->mongoCollection->chunks
+                'class' => 'yii\rethinkdb\Collection',
+                'rethinkCollection' => $this->rethinkCollection->chunks
             ]);
         }
 
@@ -62,7 +62,7 @@ class Collection extends \yii\mongodb\Collection
     public function remove($condition = [], $options = [])
     {
         $result = parent::remove($condition, $options);
-        $this->tryLastError(); // MongoGridFS::remove will return even if the remove failed
+        $this->tryLastError(); // RethinkGridFS::remove will return even if the remove failed
 
         return $result;
     }
@@ -73,7 +73,7 @@ class Collection extends \yii\mongodb\Collection
      * @param string $filename name of the file to store.
      * @param array $metadata other metadata fields to include in the file document.
      * @param array $options list of options in format: optionName => optionValue
-     * @return mixed the "_id" of the saved file document. This will be a generated [[\MongoId]]
+     * @return mixed the "_id" of the saved file document. This will be a generated [[\RethinkId]]
      * unless an "_id" was explicitly specified in the metadata.
      * @throws Exception on failure.
      */
@@ -84,7 +84,7 @@ class Collection extends \yii\mongodb\Collection
         try {
             Yii::beginProfile($token, __METHOD__);
             $options = array_merge(['w' => 1], $options);
-            $result = $this->mongoCollection->storeFile($filename, $metadata, $options);
+            $result = $this->rethinkCollection->storeFile($filename, $metadata, $options);
             Yii::endProfile($token, __METHOD__);
 
             return $result;
@@ -100,7 +100,7 @@ class Collection extends \yii\mongodb\Collection
      * @param string $bytes string of bytes to store.
      * @param array $metadata other metadata fields to include in the file document.
      * @param array $options list of options in format: optionName => optionValue
-     * @return mixed the "_id" of the saved file document. This will be a generated [[\MongoId]]
+     * @return mixed the "_id" of the saved file document. This will be a generated [[\RethinkId]]
      * unless an "_id" was explicitly specified in the metadata.
      * @throws Exception on failure.
      */
@@ -111,7 +111,7 @@ class Collection extends \yii\mongodb\Collection
         try {
             Yii::beginProfile($token, __METHOD__);
             $options = array_merge(['w' => 1], $options);
-            $result = $this->mongoCollection->storeBytes($bytes, $metadata, $options);
+            $result = $this->rethinkCollection->storeBytes($bytes, $metadata, $options);
             Yii::endProfile($token, __METHOD__);
 
             return $result;
@@ -127,7 +127,7 @@ class Collection extends \yii\mongodb\Collection
      * @param string $name name of the uploaded file to store. This should correspond to
      * the file field's name attribute in the HTML form.
      * @param array $metadata other metadata fields to include in the file document.
-     * @return mixed the "_id" of the saved file document. This will be a generated [[\MongoId]]
+     * @return mixed the "_id" of the saved file document. This will be a generated [[\RethinkId]]
      * unless an "_id" was explicitly specified in the metadata.
      * @throws Exception on failure.
      */
@@ -137,7 +137,7 @@ class Collection extends \yii\mongodb\Collection
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = $this->mongoCollection->storeUpload($name, $metadata);
+            $result = $this->rethinkCollection->storeUpload($name, $metadata);
             Yii::endProfile($token, __METHOD__);
 
             return $result;
@@ -150,7 +150,7 @@ class Collection extends \yii\mongodb\Collection
     /**
      * Retrieves the file with given _id.
      * @param mixed $id _id of the file to find.
-     * @return \MongoGridFSFile|null found file, or null if file does not exist
+     * @return \RethinkGridFSFile|null found file, or null if file does not exist
      * @throws Exception on failure.
      */
     public function get($id)
@@ -159,7 +159,7 @@ class Collection extends \yii\mongodb\Collection
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = $this->mongoCollection->get($id);
+            $result = $this->rethinkCollection->get($id);
             Yii::endProfile($token, __METHOD__);
 
             return $result;
@@ -181,7 +181,7 @@ class Collection extends \yii\mongodb\Collection
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = $this->mongoCollection->delete($id);
+            $result = $this->rethinkCollection->delete($id);
             $this->tryResultError($result);
             Yii::endProfile($token, __METHOD__);
 

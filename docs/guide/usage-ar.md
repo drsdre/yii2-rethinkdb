@@ -1,12 +1,12 @@
-Using the MongoDB ActiveRecord
+Using the RethinkDB ActiveRecord
 ==============================
 
 This extension provides ActiveRecord solution similar ot the [[\yii\db\ActiveRecord]].
-To declare an ActiveRecord class you need to extend [[\yii\mongodb\ActiveRecord]] and
+To declare an ActiveRecord class you need to extend [[\yii\rethinkdb\ActiveRecord]] and
 implement the `collectionName` and 'attributes' methods:
 
 ```php
-use yii\mongodb\ActiveRecord;
+use yii\rethinkdb\ActiveRecord;
 
 class Customer extends ActiveRecord
 {
@@ -30,11 +30,11 @@ class Customer extends ActiveRecord
 
 Note: collection primary key name ('_id') should be always explicitly setup as an attribute.
 
-You can use [[\yii\data\ActiveDataProvider]] with [[\yii\mongodb\Query]] and [[\yii\mongodb\ActiveQuery]]:
+You can use [[\yii\data\ActiveDataProvider]] with [[\yii\rethinkdb\Query]] and [[\yii\rethinkdb\ActiveQuery]]:
 
 ```php
 use yii\data\ActiveDataProvider;
-use yii\mongodb\Query;
+use yii\rethinkdb\Query;
 
 $query = new Query;
 $query->from('customer')->where(['status' => 2]);

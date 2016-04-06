@@ -1,11 +1,11 @@
-MongoDB のアクティブレコードを使用する
+RethinkDB のアクティブレコードを使用する
 ======================================
 
 このエクステンションは [[\yii\db\ActiveRecord]] と同様なアクティブレコードのソリューションを提供します。
-アクティブレコードクラスを宣言するためには、[[\yii\mongodb\ActiveRecord]] から拡張して、`collectionName` と 'attributes' のメソッドを実装する必要があります。
+アクティブレコードクラスを宣言するためには、[[\yii\rethinkdb\ActiveRecord]] から拡張して、`collectionName` と 'attributes' のメソッドを実装する必要があります。
 
 ```php
-use yii\mongodb\ActiveRecord;
+use yii\rethinkdb\ActiveRecord;
 
 class Customer extends ActiveRecord
 {
@@ -29,11 +29,11 @@ class Customer extends ActiveRecord
 
 >Note|注意: コレクションのプライマリキーの名前 ('_id') は、常に属性の一つとしてセットアップしなければなりません。
 
-[[\yii\mongodb\Query]] および [[\yii\mongodb\ActiveQuery]] によって [[\yii\data\ActiveDataProvider]] を使用することが出来ます。
+[[\yii\rethinkdb\Query]] および [[\yii\rethinkdb\ActiveQuery]] によって [[\yii\data\ActiveDataProvider]] を使用することが出来ます。
 
 ```php
 use yii\data\ActiveDataProvider;
-use yii\mongodb\Query;
+use yii\rethinkdb\Query;
 
 $query = new Query;
 $query->from('customer')->where(['status' => 2]);

@@ -5,45 +5,45 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb\validators;
+namespace yii\rethinkdb\validators;
 
 use yii\base\InvalidConfigException;
 use yii\validators\Validator;
 use Yii;
 
 /**
- * MongoIdValidator verifies if the attribute is a valid Mongo ID.
- * Attribute will be considered as valid, if it is an instance of [[\MongoId]] or a its string value.
+ * RethinkIdValidator verifies if the attribute is a valid Rethink ID.
+ * Attribute will be considered as valid, if it is an instance of [[\RethinkId]] or a its string value.
  *
  * Usage example:
  *
  * ~~~
- * class Customer extends yii\mongodb\ActiveRecord
+ * class Customer extends yii\rethinkdb\ActiveRecord
  * {
  *     ...
  *     public function rules()
  *     {
  *         return [
- *             ['_id', 'yii\mongodb\validators\MongoIdValidator']
+ *             ['_id', 'yii\rethinkdb\validators\RethinkIdValidator']
  *         ];
  *     }
  * }
  * ~~~
  *
- * This validator may also serve as a filter, allowing conversion of Mongo ID value either to the plain string
- * or to [[\MongoId]] instance. You can enable this feature via [[forceFormat]].
+ * This validator may also serve as a filter, allowing conversion of Rethink ID value either to the plain string
+ * or to [[\RethinkId]] instance. You can enable this feature via [[forceFormat]].
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0.4
  */
-class MongoIdValidator extends Validator
+class RethinkIdValidator extends Validator
 {
     /**
      * @var string|null specifies the format, which validated attribute value should be converted to
      * in case validation was successful.
      * valid values are:
      * - 'string' - enforce value converted to plain string.
-     * - 'object' - enforce value converted to [[\MongoId]] instance.
+     * - 'object' - enforce value converted to [[\RethinkId]] instance.
      * If not set - no conversion will be performed, leaving attribute value intact.
      */
     public $forceFormat;
@@ -65,16 +65,16 @@ class MongoIdValidator extends Validator
     public function validateAttribute($model, $attribute)
     {
         $value = $model->$attribute;
-        $mongoId = $this->parseMongoId($value);
-        if (is_object($mongoId)) {
+        $rethinkId = $this->parseRethinkId($value);
+        if (is_object($rethinkId)) {
             if ($this->forceFormat !== null) {
                 switch ($this->forceFormat) {
                     case 'string' : {
-                        $model->$attribute = $mongoId->__toString();
+                        $model->$attribute = $rethinkId->__toString();
                         break;
                     }
                     case 'object' : {
-                        $model->$attribute = $mongoId;
+                        $model->$attribute = $rethinkId;
                         break;
                     }
                     default: {
@@ -92,20 +92,20 @@ class MongoIdValidator extends Validator
      */
     protected function validateValue($value)
     {
-        return is_object($this->parseMongoId($value)) ? null : [$this->message, []];
+        return is_object($this->parseRethinkId($value)) ? null : [$this->message, []];
     }
 
     /**
      * @param mixed $value
-     * @return \MongoId|null
+     * @return \RethinkId|null
      */
-    private function parseMongoId($value)
+    private function parseRethinkId($value)
     {
-        if ($value instanceof \MongoId) {
+        if ($value instanceof \RethinkId) {
             return $value;
         }
         try {
-            return new \MongoId($value);
+            return new \RethinkId($value);
         } catch (\Exception $e) {
             return null;
         }

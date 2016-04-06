@@ -1,7 +1,7 @@
 <?php
-namespace yiiunit\extensions\mongodb\console\controllers;
+namespace yiiunit\extensions\rethinkdb\console\controllers;
 
-use yii\mongodb\console\controllers\MigrateController;
+use yii\rethinkdb\console\controllers\MigrateController;
 
 /**
  * MigrateController that writes output via echo instead of using output stream. Allows us to buffer it.

@@ -5,29 +5,29 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb\gii\model;
+namespace yii\rethinkdb\gii\model;
 
 use Yii;
-use yii\mongodb\ActiveRecord;
-use yii\mongodb\Connection;
+use yii\rethinkdb\ActiveRecord;
+use yii\rethinkdb\Connection;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;
 
 /**
- * This generator will generate ActiveRecord class for the specified MongoDB collection.
+ * This generator will generate ActiveRecord class for the specified RethinkDB collection.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0
  */
 class Generator extends \yii\gii\Generator
 {
-    public $db = 'mongodb';
+    public $db = 'rethinkdb';
     public $ns = 'app\models';
     public $collectionName;
     public $databaseName;
     public $attributeList;
     public $modelClass;
-    public $baseClass = 'yii\mongodb\ActiveRecord';
+    public $baseClass = 'yii\rethinkdb\ActiveRecord';
 
 
     /**
@@ -35,7 +35,7 @@ class Generator extends \yii\gii\Generator
      */
     public function getName()
     {
-        return 'MongoDB Model Generator';
+        return 'RethinkDB Model Generator';
     }
 
     /**
@@ -43,7 +43,7 @@ class Generator extends \yii\gii\Generator
      */
     public function getDescription()
     {
-        return 'This generator generates an ActiveRecord class for the specified MongoDB collection.';
+        return 'This generator generates an ActiveRecord class for the specified RethinkDB collection.';
     }
 
     /**
@@ -78,7 +78,7 @@ class Generator extends \yii\gii\Generator
     {
         return array_merge(parent::attributeLabels(), [
             'ns' => 'Namespace',
-            'db' => 'MongoDB Connection ID',
+            'db' => 'RethinkDB Connection ID',
             'collectionName' => 'Collection Name',
             'databaseName' => 'Database Name',
             'modelClass' => 'Model Class',
@@ -93,10 +93,10 @@ class Generator extends \yii\gii\Generator
     {
         return array_merge(parent::hints(), [
             'ns' => 'This is the namespace of the ActiveRecord class to be generated, e.g., <code>app\models</code>',
-            'db' => 'This is the ID of the MongoDB application component.',
-            'collectionName' => 'This is the name of the MongoDB collection that the new ActiveRecord class is associated with, e.g. <code>post</code>.',
-            'databaseName' => 'This is the name of the MongoDB database, which contains the collection that the new ActiveRecord class is associated with.
-                You may leave this field blank, if your application uses single MongoDB database.',
+            'db' => 'This is the ID of the RethinkDB application component.',
+            'collectionName' => 'This is the name of the RethinkDB collection that the new ActiveRecord class is associated with, e.g. <code>post</code>.',
+            'databaseName' => 'This is the name of the RethinkDB database, which contains the collection that the new ActiveRecord class is associated with.
+                You may leave this field blank, if your application uses single RethinkDB database.',
             'attributeList' => 'List of the collection attribute names separated by coma.
                 You do not need to specify "_id" attribute here - it will be added automatically.',
             'modelClass' => 'This is the name of the ActiveRecord class to be generated. The class name should not contain
@@ -115,7 +115,7 @@ class Generator extends \yii\gii\Generator
         if ($db !== null) {
             return [
                 'collectionName' => function () use ($db) {
-                    return $db->getDatabase()->mongoDb->getCollectionNames();
+                    return $db->getDatabase()->rethinkDb->getCollectionNames();
                 },
             ];
         } else {
@@ -222,7 +222,7 @@ class Generator extends \yii\gii\Generator
         if (!Yii::$app->has($this->db)) {
             $this->addError('db', 'There is no application component named "' . $this->db . '".');
         } elseif (!Yii::$app->get($this->db) instanceof Connection) {
-            $this->addError('db', 'The "' . $this->db . '" application component must be a MongoDB connection instance.');
+            $this->addError('db', 'The "' . $this->db . '" application component must be a RethinkDB connection instance.');
         }
     }
 

@@ -5,30 +5,30 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb;
+namespace yii\rethinkdb;
 
 use yii\base\InvalidParamException;
 use yii\base\Object;
 use Yii;
 
 /**
- * Collection represents the Mongo collection information.
+ * Collection represents the Rethink collection information.
  *
  * A collection object is usually created by calling [[Database::getCollection()]] or [[Connection::getCollection()]].
  *
- * Collection provides the basic interface for the Mongo queries, mostly: insert, update, delete operations.
+ * Collection provides the basic interface for the Rethink queries, mostly: insert, update, delete operations.
  * For example:
  *
  * ~~~
- * $collection = Yii::$app->mongodb->getCollection('customer');
+ * $collection = Yii::$app->rethinkdb->getCollection('customer');
  * $collection->insert(['name' => 'John Smith', 'status' => 1]);
  * ~~~
  *
  * To perform "find" queries, please use [[Query]] instead.
  *
- * Mongo uses JSON format to specify query conditions with quite specific syntax.
+ * Rethink uses JSON format to specify query conditions with quite specific syntax.
  * However Collection class provides the ability of "translating" common condition format used "yii\db\*"
- * into Mongo condition.
+ * into Rethink condition.
  * For example:
  * ~~~
  * $condition = [
@@ -53,8 +53,8 @@ use Yii;
  * ]
  * ~~~
  *
- * Note: condition values for the key '_id' will be automatically cast to [[\MongoId]] instance,
- * even if they are plain strings. However, if you have other columns, containing [[\MongoId]], you
+ * Note: condition values for the key '_id' will be automatically cast to [[\RethinkId]] instance,
+ * even if they are plain strings. However, if you have other columns, containing [[\RethinkId]], you
  * should take care of possible typecast on your own.
  *
  * @property string $fullName Full name of this collection, including database name. This property is
@@ -68,9 +68,9 @@ use Yii;
 class Collection extends Object
 {
     /**
-     * @var \MongoCollection Mongo collection instance.
+     * @var \RethinkCollection Rethink collection instance.
      */
-    public $mongoCollection;
+    public $rethinkCollection;
 
 
     /**
@@ -78,7 +78,7 @@ class Collection extends Object
      */
     public function getName()
     {
-        return $this->mongoCollection->getName();
+        return $this->rethinkCollection->getName();
     }
 
     /**
@@ -86,7 +86,7 @@ class Collection extends Object
      */
     public function getFullName()
     {
-        return $this->mongoCollection->__toString();
+        return $this->rethinkCollection->__toString();
     }
 
     /**
@@ -94,7 +94,7 @@ class Collection extends Object
      */
     public function getLastError()
     {
-        return $this->mongoCollection->db->lastError();
+        return $this->rethinkCollection->db->lastError();
     }
 
     /**
@@ -131,21 +131,21 @@ class Collection extends Object
     protected function processLogData($data)
     {
         if (is_object($data)) {
-            if ($data instanceof \MongoId ||
-                $data instanceof \MongoRegex ||
-                $data instanceof \MongoDate ||
-                $data instanceof \MongoInt32 ||
-                $data instanceof \MongoInt64 ||
-                $data instanceof \MongoTimestamp
+            if ($data instanceof \RethinkId ||
+                $data instanceof \RethinkRegex ||
+                $data instanceof \RethinkDate ||
+                $data instanceof \RethinkInt32 ||
+                $data instanceof \RethinkInt64 ||
+                $data instanceof \RethinkTimestamp
             ) {
                 $data = get_class($data) . '(' . $data->__toString() . ')';
-            } elseif ($data instanceof \MongoCode) {
-                $data = 'MongoCode( ' . $data->__toString() . ' )';
-            } elseif ($data instanceof \MongoBinData) {
-                $data = 'MongoBinData(...)';
-            } elseif ($data instanceof \MongoDBRef) {
-                $data = 'MongoDBRef(...)';
-            } elseif ($data instanceof \MongoMinKey || $data instanceof \MongoMaxKey) {
+            } elseif ($data instanceof \RethinkCode) {
+                $data = 'RethinkCode( ' . $data->__toString() . ' )';
+            } elseif ($data instanceof \RethinkBinData) {
+                $data = 'RethinkBinData(...)';
+            } elseif ($data instanceof \RethinkDBRef) {
+                $data = 'RethinkDBRef(...)';
+            } elseif ($data instanceof \RethinkMinKey || $data instanceof \RethinkMaxKey) {
                 $data = get_class($data);
             } else {
                 $result = [];
@@ -182,7 +182,7 @@ class Collection extends Object
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = $this->mongoCollection->drop();
+            $result = $this->rethinkCollection->drop();
             $this->tryResultError($result);
             Yii::endProfile($token, __METHOD__);
 
@@ -220,10 +220,10 @@ class Collection extends Object
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            if (method_exists($this->mongoCollection, 'createIndex')) {
-                $result = $this->mongoCollection->createIndex($keys, $options);
+            if (method_exists($this->rethinkCollection, 'createIndex')) {
+                $result = $this->rethinkCollection->createIndex($keys, $options);
             } else {
-                $result = $this->mongoCollection->ensureIndex($keys, $options);
+                $result = $this->rethinkCollection->ensureIndex($keys, $options);
             }
             $this->tryResultError($result);
             Yii::endProfile($token, __METHOD__);
@@ -261,7 +261,7 @@ class Collection extends Object
         $token = $this->composeLogToken('dropIndex', [$keys]);
         Yii::info($token, __METHOD__);
         try {
-            $result = $this->mongoCollection->deleteIndex($keys);
+            $result = $this->rethinkCollection->deleteIndex($keys);
             $this->tryResultError($result);
 
             return true;
@@ -281,7 +281,7 @@ class Collection extends Object
         $keys = [];
         foreach ($columns as $key => $value) {
             if (is_numeric($key)) {
-                $keys[$value] = \MongoCollection::ASCENDING;
+                $keys[$value] = \RethinkCollection::ASCENDING;
             } else {
                 $keys[$key] = $value;
             }
@@ -300,7 +300,7 @@ class Collection extends Object
         $token = $this->composeLogToken('dropIndexes');
         Yii::info($token, __METHOD__);
         try {
-            $result = $this->mongoCollection->deleteIndexes();
+            $result = $this->rethinkCollection->deleteIndexes();
             $this->tryResultError($result);
 
             return $result['nIndexesWas'];
@@ -315,12 +315,12 @@ class Collection extends Object
      * In order to perform "find" queries use [[Query]] class.
      * @param array $condition query condition
      * @param array $fields fields to be selected
-     * @return \MongoCursor cursor for the search results
+     * @return \RethinkCursor cursor for the search results
      * @see Query
      */
     public function find($condition = [], $fields = [])
     {
-        return $this->mongoCollection->find($this->buildCondition($condition), $fields);
+        return $this->rethinkCollection->find($this->buildCondition($condition), $fields);
     }
 
     /**
@@ -328,11 +328,11 @@ class Collection extends Object
      * @param array $condition query condition
      * @param array $fields fields to be selected
      * @return array|null the single document. Null is returned if the query results in nothing.
-     * @see http://www.php.net/manual/en/mongocollection.findone.php
+     * @see http://www.php.net/manual/en/rethinkcollection.findone.php
      */
     public function findOne($condition = [], $fields = [])
     {
-        return $this->mongoCollection->findOne($this->buildCondition($condition), $fields);
+        return $this->rethinkCollection->findOne($this->buildCondition($condition), $fields);
     }
 
     /**
@@ -343,7 +343,7 @@ class Collection extends Object
      * @param array $options list of options in format: optionName => optionValue.
      * @return array|null the original document, or the modified document when $options['new'] is set.
      * @throws Exception on failure.
-     * @see http://www.php.net/manual/en/mongocollection.findandmodify.php
+     * @see http://www.php.net/manual/en/rethinkcollection.findandmodify.php
      */
     public function findAndModify($condition, $update, $fields = [], $options = [])
     {
@@ -352,7 +352,7 @@ class Collection extends Object
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = $this->mongoCollection->findAndModify($condition, $update, $fields, $options);
+            $result = $this->rethinkCollection->findAndModify($condition, $update, $fields, $options);
             Yii::endProfile($token, __METHOD__);
 
             return $result;
@@ -366,7 +366,7 @@ class Collection extends Object
      * Inserts new data into collection.
      * @param array|object $data data to be inserted.
      * @param array $options list of options in format: optionName => optionValue.
-     * @return \MongoId new record id instance.
+     * @return \RethinkId new record id instance.
      * @throws Exception on failure.
      */
     public function insert($data, $options = [])
@@ -376,7 +376,7 @@ class Collection extends Object
         try {
             Yii::beginProfile($token, __METHOD__);
             $options = array_merge(['w' => 1], $options);
-            $this->tryResultError($this->mongoCollection->insert($data, $options));
+            $this->tryResultError($this->rethinkCollection->insert($data, $options));
             Yii::endProfile($token, __METHOD__);
 
             return is_array($data) ? $data['_id'] : $data->_id;
@@ -400,7 +400,7 @@ class Collection extends Object
         try {
             Yii::beginProfile($token, __METHOD__);
             $options = array_merge(['w' => 1], $options);
-            $this->tryResultError($this->mongoCollection->batchInsert($rows, $options));
+            $this->tryResultError($this->rethinkCollection->batchInsert($rows, $options));
             Yii::endProfile($token, __METHOD__);
 
             return $rows;
@@ -412,7 +412,7 @@ class Collection extends Object
 
     /**
      * Updates the rows, which matches given criteria by given data.
-     * Note: for "multiple" mode Mongo requires explicit strategy "$set" or "$inc"
+     * Note: for "multiple" mode Rethink requires explicit strategy "$set" or "$inc"
      * to be specified for the "newData". If no strategy is passed "$set" will be used.
      * @param array $condition description of the objects to update.
      * @param array $newData the object with which to update the matching records.
@@ -434,7 +434,7 @@ class Collection extends Object
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = $this->mongoCollection->update($condition, $newData, $options);
+            $result = $this->rethinkCollection->update($condition, $newData, $options);
             $this->tryResultError($result);
             Yii::endProfile($token, __METHOD__);
             if (is_array($result) && array_key_exists('n', $result)) {
@@ -452,7 +452,7 @@ class Collection extends Object
      * Update the existing database data, otherwise insert this data
      * @param array|object $data data to be updated/inserted.
      * @param array $options list of options in format: optionName => optionValue.
-     * @return \MongoId updated/new record id instance.
+     * @return \RethinkId updated/new record id instance.
      * @throws Exception on failure.
      */
     public function save($data, $options = [])
@@ -462,7 +462,7 @@ class Collection extends Object
         try {
             Yii::beginProfile($token, __METHOD__);
             $options = array_merge(['w' => 1], $options);
-            $this->tryResultError($this->mongoCollection->save($data, $options));
+            $this->tryResultError($this->rethinkCollection->save($data, $options));
             Yii::endProfile($token, __METHOD__);
 
             return is_array($data) ? $data['_id'] : $data->_id;
@@ -478,7 +478,7 @@ class Collection extends Object
      * @param array $options list of options in format: optionName => optionValue.
      * @return integer|boolean number of updated documents or whether operation was successful.
      * @throws Exception on failure.
-     * @see http://www.php.net/manual/en/mongocollection.remove.php
+     * @see http://www.php.net/manual/en/rethinkcollection.remove.php
      */
     public function remove($condition = [], $options = [])
     {
@@ -488,7 +488,7 @@ class Collection extends Object
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = $this->mongoCollection->remove($condition, $options);
+            $result = $this->rethinkCollection->remove($condition, $options);
             $this->tryResultError($result);
             Yii::endProfile($token, __METHOD__);
             if (is_array($result) && array_key_exists('n', $result)) {
@@ -518,9 +518,9 @@ class Collection extends Object
             Yii::beginProfile($token, __METHOD__);
             // See https://bugs.php.net/bug.php?id=68858
             if (empty($condition)) {
-                $result = $this->mongoCollection->distinct($column);
+                $result = $this->rethinkCollection->distinct($column);
             } else {
-                $result = $this->mongoCollection->distinct($column, $condition);
+                $result = $this->rethinkCollection->distinct($column, $condition);
             }
             Yii::endProfile($token, __METHOD__);
 
@@ -532,13 +532,13 @@ class Collection extends Object
     }
 
     /**
-     * Performs aggregation using Mongo Aggregation Framework.
+     * Performs aggregation using Rethink Aggregation Framework.
      * @param array $pipeline list of pipeline operators, or just the first operator
      * @param array $pipelineOperator additional pipeline operator. You can specify additional
      * pipelines via third argument, fourth argument etc.
      * @return array the result of the aggregation.
      * @throws Exception on failure.
-     * @see http://docs.mongodb.org/manual/applications/aggregation/
+     * @see http://docs.rethinkdb.org/manual/applications/aggregation/
      */
     public function aggregate($pipeline, $pipelineOperator = [])
     {
@@ -547,7 +547,7 @@ class Collection extends Object
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = call_user_func_array([$this->mongoCollection, 'aggregate'], $args);
+            $result = call_user_func_array([$this->rethinkCollection, 'aggregate'], $args);
             $this->tryResultError($result);
             Yii::endProfile($token, __METHOD__);
 
@@ -559,32 +559,32 @@ class Collection extends Object
     }
 
     /**
-     * Performs aggregation using Mongo "group" command.
+     * Performs aggregation using Rethink "group" command.
      * @param mixed $keys fields to group by. If an array or non-code object is passed,
-     * it will be the key used to group results. If instance of [[\MongoCode]] passed,
+     * it will be the key used to group results. If instance of [[\RethinkCode]] passed,
      * it will be treated as a function that returns the key to group by.
      * @param array $initial Initial value of the aggregation counter object.
-     * @param \MongoCode|string $reduce function that takes two arguments (the current
+     * @param \RethinkCode|string $reduce function that takes two arguments (the current
      * document and the aggregation to this point) and does the aggregation.
-     * Argument will be automatically cast to [[\MongoCode]].
+     * Argument will be automatically cast to [[\RethinkCode]].
      * @param array $options optional parameters to the group command. Valid options include:
      *  - condition - criteria for including a document in the aggregation.
      *  - finalize - function called once per unique key that takes the final output of the reduce function.
      * @return array the result of the aggregation.
      * @throws Exception on failure.
-     * @see http://docs.mongodb.org/manual/reference/command/group/
+     * @see http://docs.rethinkdb.org/manual/reference/command/group/
      */
     public function group($keys, $initial, $reduce, $options = [])
     {
-        if (!($reduce instanceof \MongoCode)) {
-            $reduce = new \MongoCode((string) $reduce);
+        if (!($reduce instanceof \RethinkCode)) {
+            $reduce = new \RethinkCode((string) $reduce);
         }
         if (array_key_exists('condition', $options)) {
             $options['condition'] = $this->buildCondition($options['condition']);
         }
         if (array_key_exists('finalize', $options)) {
-            if (!($options['finalize'] instanceof \MongoCode)) {
-                $options['finalize'] = new \MongoCode((string) $options['finalize']);
+            if (!($options['finalize'] instanceof \RethinkCode)) {
+                $options['finalize'] = new \RethinkCode((string) $options['finalize']);
             }
         }
         $token = $this->composeLogToken('group', [$keys, $initial, $reduce, $options]);
@@ -593,9 +593,9 @@ class Collection extends Object
             Yii::beginProfile($token, __METHOD__);
             // Avoid possible E_DEPRECATED for $options:
             if (empty($options)) {
-                $result = $this->mongoCollection->group($keys, $initial, $reduce);
+                $result = $this->rethinkCollection->group($keys, $initial, $reduce);
             } else {
-                $result = $this->mongoCollection->group($keys, $initial, $reduce, $options);
+                $result = $this->rethinkCollection->group($keys, $initial, $reduce, $options);
             }
             $this->tryResultError($result);
 
@@ -612,13 +612,13 @@ class Collection extends Object
     }
 
     /**
-     * Performs aggregation using Mongo "map reduce" mechanism.
+     * Performs aggregation using Rethink "map reduce" mechanism.
      * Note: this function will not return the aggregation result, instead it will
-     * write it inside the another Mongo collection specified by "out" parameter.
+     * write it inside the another Rethink collection specified by "out" parameter.
      * For example:
      *
      * ~~~
-     * $customerCollection = Yii::$app->mongo->getCollection('customer');
+     * $customerCollection = Yii::$app->rethink->getCollection('customer');
      * $resultCollectionName = $customerCollection->mapReduce(
      *     'function () {emit(this.status, this.amount)}',
      *     'function (key, values) {return Array.sum(values)}',
@@ -629,11 +629,11 @@ class Collection extends Object
      * $results = $query->from($resultCollectionName)->all();
      * ~~~
      *
-     * @param \MongoCode|string $map function, which emits map data from collection.
-     * Argument will be automatically cast to [[\MongoCode]].
-     * @param \MongoCode|string $reduce function that takes two arguments (the map key
+     * @param \RethinkCode|string $map function, which emits map data from collection.
+     * Argument will be automatically cast to [[\RethinkCode]].
+     * @param \RethinkCode|string $reduce function that takes two arguments (the map key
      * and the map values) and does the aggregation.
-     * Argument will be automatically cast to [[\MongoCode]].
+     * Argument will be automatically cast to [[\RethinkCode]].
      * @param string|array $out output collection name. It could be a string for simple output
      * ('outputCollection'), or an array for parametrized output (['merge' => 'outputCollection']).
      * You can pass ['inline' => true] to fetch the result at once without temporary collection usage.
@@ -650,11 +650,11 @@ class Collection extends Object
      */
     public function mapReduce($map, $reduce, $out, $condition = [], $options = [])
     {
-        if (!($map instanceof \MongoCode)) {
-            $map = new \MongoCode((string) $map);
+        if (!($map instanceof \RethinkCode)) {
+            $map = new \RethinkCode((string) $map);
         }
-        if (!($reduce instanceof \MongoCode)) {
-            $reduce = new \MongoCode((string) $reduce);
+        if (!($reduce instanceof \RethinkCode)) {
+            $reduce = new \RethinkCode((string) $reduce);
         }
         $command = [
             'mapReduce' => $this->getName(),
@@ -666,8 +666,8 @@ class Collection extends Object
             $command['query'] = $this->buildCondition($condition);
         }
         if (array_key_exists('finalize', $options)) {
-            if (!($options['finalize'] instanceof \MongoCode)) {
-                $options['finalize'] = new \MongoCode((string) $options['finalize']);
+            if (!($options['finalize'] instanceof \RethinkCode)) {
+                $options['finalize'] = new \RethinkCode((string) $options['finalize']);
             }
         }
         if (!empty($options)) {
@@ -678,7 +678,7 @@ class Collection extends Object
         try {
             Yii::beginProfile($token, __METHOD__);
             $command = array_merge(['mapReduce' => $this->getName()], $command);
-            $result = $this->mongoCollection->db->command($command);
+            $result = $this->rethinkCollection->db->command($command);
             $this->tryResultError($result);
             Yii::endProfile($token, __METHOD__);
 
@@ -691,7 +691,7 @@ class Collection extends Object
 
     /**
      * Performs full text search.
-     * @param string $search string of terms that MongoDB parses and uses to query the text index.
+     * @param string $search string of terms that RethinkDB parses and uses to query the text index.
      * @param array $condition criteria for filtering a results list.
      * @param array $fields list of fields to be returned in result.
      * @param array $options additional optional parameters to the mapReduce command. Valid options include:
@@ -721,7 +721,7 @@ class Collection extends Object
         try {
             Yii::beginProfile($token, __METHOD__);
             $command = array_merge(['text' => $this->getName()], $command);
-            $result = $this->mongoCollection->db->command($command);
+            $result = $this->rethinkCollection->db->command($command);
             $this->tryResultError($result);
             Yii::endProfile($token, __METHOD__);
 
@@ -770,7 +770,7 @@ class Collection extends Object
     }
 
     /**
-     * Converts "\yii\db\*" quick condition keyword into actual Mongo condition keyword.
+     * Converts "\yii\db\*" quick condition keyword into actual Rethink condition keyword.
      * @param string $key raw condition key.
      * @return string actual key.
      */
@@ -791,42 +791,42 @@ class Collection extends Object
     }
 
     /**
-     * Converts given value into [[MongoId]] instance.
+     * Converts given value into [[RethinkId]] instance.
      * If array given, each element of it will be processed.
      * @param mixed $rawId raw id(s).
-     * @return array|\MongoId normalized id(s).
+     * @return array|\RethinkId normalized id(s).
      */
-    protected function ensureMongoId($rawId)
+    protected function ensureRethinkId($rawId)
     {
         if (is_array($rawId)) {
             $result = [];
             foreach ($rawId as $key => $value) {
-                $result[$key] = $this->ensureMongoId($value);
+                $result[$key] = $this->ensureRethinkId($value);
             }
 
             return $result;
         } elseif (is_object($rawId)) {
-            if ($rawId instanceof \MongoId) {
+            if ($rawId instanceof \RethinkId) {
                 return $rawId;
             } else {
                 $rawId = (string) $rawId;
             }
         }
         try {
-            $mongoId = new \MongoId($rawId);
-        } catch (\MongoException $e) {
+            $rethinkId = new \RethinkId($rawId);
+        } catch (\RethinkException $e) {
             // invalid id format
-            $mongoId = $rawId;
+            $rethinkId = $rawId;
         }
 
-        return $mongoId;
+        return $rethinkId;
     }
 
     /**
-     * Parses the condition specification and generates the corresponding Mongo condition.
+     * Parses the condition specification and generates the corresponding Rethink condition.
      * @param array $condition the condition specification. Please refer to [[Query::where()]]
      * on how to specify a condition.
-     * @return array the generated Mongo condition
+     * @return array the generated Rethink condition
      * @throws InvalidParamException if the condition is in bad format
      */
     public function buildCondition($condition)
@@ -867,14 +867,14 @@ class Collection extends Object
     /**
      * Creates a condition based on column-value pairs.
      * @param array $condition the condition specification.
-     * @return array the generated Mongo condition.
+     * @return array the generated Rethink condition.
      */
     public function buildHashCondition($condition)
     {
         $result = [];
         foreach ($condition as $name => $value) {
             if (strncmp('$', $name, 1) === 0) {
-                // Native Mongo condition:
+                // Native Rethink condition:
                 $result[$name] = $value;
             } else {
                 if (is_array($value)) {
@@ -882,13 +882,13 @@ class Collection extends Object
                         // Quick IN condition:
                         $result = array_merge($result, $this->buildInCondition('IN', [$name, $value]));
                     } else {
-                        // Mongo complex condition:
+                        // Rethink complex condition:
                         $result[$name] = $value;
                     }
                 } else {
                     // Direct match:
                     if ($name == '_id') {
-                        $value = $this->ensureMongoId($value);
+                        $value = $this->ensureRethinkId($value);
                     }
                     $result[$name] = $value;
                 }
@@ -901,8 +901,8 @@ class Collection extends Object
     /**
      * Composes `NOT` condition.
      * @param string $operator the operator to use for connecting the given operands
-     * @param array $operands the Mongo conditions to connect.
-     * @return array the generated Mongo condition.
+     * @param array $operands the Rethink conditions to connect.
+     * @return array the generated Rethink condition.
      * @throws InvalidParamException if wrong number of operands have been given.
      */
     public function buildNotCondition($operator, $operands)
@@ -918,7 +918,7 @@ class Collection extends Object
             $result[$name] = ['$not' => $this->buildCondition($value)];
         } else {
             if ($name == '_id') {
-                $value = $this->ensureMongoId($value);
+                $value = $this->ensureRethinkId($value);
             }
             $result[$name] = ['$ne' => $value];
         }
@@ -929,8 +929,8 @@ class Collection extends Object
     /**
      * Connects two or more conditions with the `AND` operator.
      * @param string $operator the operator to use for connecting the given operands
-     * @param array $operands the Mongo conditions to connect.
-     * @return array the generated Mongo condition.
+     * @param array $operands the Rethink conditions to connect.
+     * @return array the generated Rethink condition.
      */
     public function buildAndCondition($operator, $operands)
     {
@@ -946,8 +946,8 @@ class Collection extends Object
     /**
      * Connects two or more conditions with the `OR` operator.
      * @param string $operator the operator to use for connecting the given operands
-     * @param array $operands the Mongo conditions to connect.
-     * @return array the generated Mongo condition.
+     * @param array $operands the Rethink conditions to connect.
+     * @return array the generated Rethink condition.
      */
     public function buildOrCondition($operator, $operands)
     {
@@ -961,11 +961,11 @@ class Collection extends Object
     }
 
     /**
-     * Creates an Mongo condition, which emulates the `BETWEEN` operator.
+     * Creates an Rethink condition, which emulates the `BETWEEN` operator.
      * @param string $operator the operator to use
      * @param array $operands the first operand is the column name. The second and third operands
      * describe the interval that column value should be in.
-     * @return array the generated Mongo condition.
+     * @return array the generated Rethink condition.
      * @throws InvalidParamException if wrong number of operands have been given.
      */
     public function buildBetweenCondition($operator, $operands)
@@ -992,12 +992,12 @@ class Collection extends Object
     }
 
     /**
-     * Creates an Mongo condition with the `IN` operator.
+     * Creates an Rethink condition with the `IN` operator.
      * @param string $operator the operator to use (e.g. `IN` or `NOT IN`)
      * @param array $operands the first operand is the column name. If it is an array
      * a composite IN condition will be generated.
      * The second operand is an array of values that column value should be among.
-     * @return array the generated Mongo condition.
+     * @return array the generated Rethink condition.
      * @throws InvalidParamException if wrong number of operands have been given.
      */
     public function buildInCondition($operator, $operands)
@@ -1024,7 +1024,7 @@ class Collection extends Object
         $result = [];
         foreach ($columns as $column) {
             if ($column == '_id') {
-                $inValues = $this->ensureMongoId($values[$column]);
+                $inValues = $this->ensureRethinkId($values[$column]);
             } else {
                 $inValues = $values[$column];
             }
@@ -1041,10 +1041,10 @@ class Collection extends Object
     }
 
     /**
-     * @param string $operator MongoDB the operator to use (`$in` OR `$nin`)
+     * @param string $operator RethinkDB the operator to use (`$in` OR `$nin`)
      * @param array $columns list of compare columns
      * @param array $values compare values in format: columnName => [values]
-     * @return array the generated Mongo condition.
+     * @return array the generated Rethink condition.
      */
     private function buildCompositeInCondition($operator, $columns, $values)
     {
@@ -1054,7 +1054,7 @@ class Collection extends Object
         foreach ($values as $columnValues) {
             foreach ($columnValues as $column => $value) {
                 if ($column == '_id') {
-                    $value = $this->ensureMongoId($value);
+                    $value = $this->ensureRethinkId($value);
                 }
                 $inValues[$column][] = $value;
             }
@@ -1073,11 +1073,11 @@ class Collection extends Object
     }
 
     /**
-     * Creates a Mongo regular expression condition.
+     * Creates a Rethink regular expression condition.
      * @param string $operator the operator to use
      * @param array $operands the first operand is the column name.
      * The second operand is a single value that column value should be compared with.
-     * @return array the generated Mongo condition.
+     * @return array the generated Rethink condition.
      * @throws InvalidParamException if wrong number of operands have been given.
      */
     public function buildRegexCondition($operator, $operands)
@@ -1086,19 +1086,19 @@ class Collection extends Object
             throw new InvalidParamException("Operator '$operator' requires two operands.");
         }
         list($column, $value) = $operands;
-        if (!($value instanceof \MongoRegex)) {
-            $value = new \MongoRegex($value);
+        if (!($value instanceof \RethinkRegex)) {
+            $value = new \RethinkRegex($value);
         }
 
         return [$column => $value];
     }
 
     /**
-     * Creates a Mongo condition, which emulates the `LIKE` operator.
+     * Creates a Rethink condition, which emulates the `LIKE` operator.
      * @param string $operator the operator to use
      * @param array $operands the first operand is the column name.
      * The second operand is a single value that column value should be compared with.
-     * @return array the generated Mongo condition.
+     * @return array the generated Rethink condition.
      * @throws InvalidParamException if wrong number of operands have been given.
      */
     public function buildLikeCondition($operator, $operands)
@@ -1107,20 +1107,20 @@ class Collection extends Object
             throw new InvalidParamException("Operator '$operator' requires two operands.");
         }
         list($column, $value) = $operands;
-        if (!($value instanceof \MongoRegex)) {
-            $value = new \MongoRegex('/' . preg_quote($value) . '/i');
+        if (!($value instanceof \RethinkRegex)) {
+            $value = new \RethinkRegex('/' . preg_quote($value) . '/i');
         }
 
         return [$column => $value];
     }
 
     /**
-     * Creates an Mongo condition like `{$operator:{field:value}}`.
-     * @param string $operator the operator to use. Besides regular MongoDB operators, aliases like `>`, `<=`,
+     * Creates an Rethink condition like `{$operator:{field:value}}`.
+     * @param string $operator the operator to use. Besides regular RethinkDB operators, aliases like `>`, `<=`,
      * and so on, can be used here.
      * @param array $operands the first operand is the column name.
      * The second operand is a single value that column value should be compared with.
-     * @return string the generated Mongo condition.
+     * @return string the generated Rethink condition.
      * @throws InvalidParamException if wrong number of operands have been given.
      */
     public function buildSimpleCondition($operator, $operands)

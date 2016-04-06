@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb;
+namespace yii\rethinkdb;
 
 use yii\base\Component;
 use yii\db\MigrationInterface;
@@ -13,16 +13,16 @@ use yii\di\Instance;
 use yii\helpers\Json;
 
 /**
- * Migration is the base class for representing a MongoDB migration.
+ * Migration is the base class for representing a RethinkDB migration.
  *
- * Each child class of Migration represents an individual MongoDB migration which
+ * Each child class of Migration represents an individual RethinkDB migration which
  * is identified by the child class name.
  *
  * Within each migration, the [[up()]] method should be overridden to contain the logic
  * for "upgrading" the database; while the [[down()]] method for the "downgrading"
  * logic.
  *
- * Migration provides a set of convenient methods for manipulating MongoDB data and schema.
+ * Migration provides a set of convenient methods for manipulating RethinkDB data and schema.
  * For example, the [[createIndex()]] method can be used to create a collection index.
  * Compared with the same methods in [[Collection]], these methods will display extra
  * information showing the method parameters and execution time, which may be useful when
@@ -34,11 +34,11 @@ use yii\helpers\Json;
 abstract class Migration extends Component implements MigrationInterface
 {
     /**
-     * @var Connection|array|string the MongoDB connection object or the application component ID of the MongoDB connection
+     * @var Connection|array|string the RethinkDB connection object or the application component ID of the RethinkDB connection
      * that this migration should work with.
      * Starting from version 2.0.2, this can also be a configuration array for creating the object.
      */
-    public $db = 'mongodb';
+    public $db = 'rethinkdb';
 
 
     /**
@@ -126,7 +126,7 @@ abstract class Migration extends Component implements MigrationInterface
      * @param array|string $collection collection name.
      * @param array|object $data data to be inserted.
      * @param array $options list of options in format: optionName => optionValue.
-     * @return \MongoId new record id instance.
+     * @return \RethinkId new record id instance.
      */
     public function insert($collection, $data, $options = [])
     {
@@ -155,7 +155,7 @@ abstract class Migration extends Component implements MigrationInterface
 
     /**
      * Updates the rows, which matches given criteria by given data.
-     * Note: for "multiple" mode Mongo requires explicit strategy "$set" or "$inc"
+     * Note: for "multiple" mode Rethink requires explicit strategy "$set" or "$inc"
      * to be specified for the "newData". If no strategy is passed "$set" will be used.
      * @param array|string $collection collection name.
      * @param array $condition description of the objects to update.
@@ -177,7 +177,7 @@ abstract class Migration extends Component implements MigrationInterface
      * @param array|string $collection collection name.
      * @param array|object $data data to be updated/inserted.
      * @param array $options list of options in format: optionName => optionValue.
-     * @return \MongoId updated/new record id instance.
+     * @return \RethinkId updated/new record id instance.
      */
     public function save($collection, $data, $options = [])
     {

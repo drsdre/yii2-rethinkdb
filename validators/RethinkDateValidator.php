@@ -5,23 +5,23 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb\validators;
+namespace yii\rethinkdb\validators;
 
 use yii\validators\DateValidator;
 
 /**
- * MongoDateValidator is an enhanced version of [[DateValidator]], which supports [[\MongoDate]] values.
+ * RethinkDateValidator is an enhanced version of [[DateValidator]], which supports [[\RethinkDate]] values.
  *
  * Usage example:
  *
  * ~~~
- * class Customer extends yii\mongodb\ActiveRecord
+ * class Customer extends yii\rethinkdb\ActiveRecord
  * {
  *     ...
  *     public function rules()
  *     {
  *         return [
- *             ['date', 'yii\mongodb\validators\MongoDateValidator', 'format' => 'MM/dd/yyyy']
+ *             ['date', 'yii\rethinkdb\validators\RethinkDateValidator', 'format' => 'MM/dd/yyyy']
  *         ];
  *     }
  * }
@@ -32,26 +32,26 @@ use yii\validators\DateValidator;
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0.4
  */
-class MongoDateValidator extends DateValidator
+class RethinkDateValidator extends DateValidator
 {
     /**
-     * @var string the name of the attribute to receive the parsing result as [[\MongoDate]] instance.
+     * @var string the name of the attribute to receive the parsing result as [[\RethinkDate]] instance.
      * When this property is not null and the validation is successful, the named attribute will
-     * receive the parsing result as [[\MongoDate]] instance.
+     * receive the parsing result as [[\RethinkDate]] instance.
      *
      * This can be the same attribute as the one being validated. If this is the case,
      * the original value will be overwritten with the value after successful validation.
      */
-    public $mongoDateAttribute;
+    public $rethinkDateAttribute;
 
     /**
      * @inheritdoc
      */
     public function validateAttribute($model, $attribute)
     {
-        $mongoDateAttribute = $this->mongoDateAttribute;
+        $rethinkDateAttribute = $this->rethinkDateAttribute;
         if ($this->timestampAttribute === null) {
-            $this->timestampAttribute = $mongoDateAttribute;
+            $this->timestampAttribute = $rethinkDateAttribute;
         }
 
         $originalErrorCount = count($model->getErrors($attribute));
@@ -59,12 +59,12 @@ class MongoDateValidator extends DateValidator
         $afterValidateErrorCount = count($model->getErrors($attribute));
 
         if ($originalErrorCount === $afterValidateErrorCount) {
-            if ($this->mongoDateAttribute !== null) {
+            if ($this->rethinkDateAttribute !== null) {
                 $timestamp = $model->{$this->timestampAttribute};
-                $mongoDateAttributeValue = $model->{$this->mongoDateAttribute};
+                $rethinkDateAttributeValue = $model->{$this->rethinkDateAttribute};
                 // ensure "dirty attributes" support :
-                if (!($mongoDateAttributeValue instanceof \MongoDate) || $mongoDateAttributeValue->sec !== $timestamp) {
-                    $model->{$this->mongoDateAttribute} = new \MongoDate($timestamp);
+                if (!($rethinkDateAttributeValue instanceof \RethinkDate) || $rethinkDateAttributeValue->sec !== $timestamp) {
+                    $model->{$this->rethinkDateAttribute} = new \RethinkDate($timestamp);
                 }
             }
         }
@@ -75,7 +75,7 @@ class MongoDateValidator extends DateValidator
      */
     protected function parseDateValue($value)
     {
-        if ($value instanceof \MongoDate) {
+        if ($value instanceof \RethinkDate) {
             return $value->sec;
         }
         return parent::parseDateValue($value);

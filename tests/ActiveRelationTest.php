@@ -1,14 +1,14 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
-use yiiunit\extensions\mongodb\data\ar\ActiveRecord;
-use yiiunit\extensions\mongodb\data\ar\Customer;
-use yiiunit\extensions\mongodb\data\ar\CustomerOrder;
-use yiiunit\extensions\mongodb\data\ar\Item;
+use yiiunit\extensions\rethinkdb\data\ar\ActiveRecord;
+use yiiunit\extensions\rethinkdb\data\ar\Customer;
+use yiiunit\extensions\rethinkdb\data\ar\CustomerOrder;
+use yiiunit\extensions\rethinkdb\data\ar\Item;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class ActiveRelationTest extends TestCase
 {

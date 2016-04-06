@@ -1,11 +1,11 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
-use yii\mongodb\Query;
+use yii\rethinkdb\Query;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class QueryTest extends TestCase
 {

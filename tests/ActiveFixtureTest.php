@@ -1,9 +1,9 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
-use yii\mongodb\ActiveFixture;
-use yiiunit\extensions\mongodb\data\ar\Customer;
+use yii\rethinkdb\ActiveFixture;
+use yiiunit\extensions\rethinkdb\data\ar\Customer;
 
 class ActiveFixtureTest extends TestCase
 {
@@ -64,7 +64,7 @@ class ActiveFixtureTest extends TestCase
     /**
      * @depends testLoadCollection
      *
-     * @see https://github.com/yiisoft/yii2-mongodb/pull/40
+     * @see https://github.com/yiisoft/yii2-rethinkdb/pull/40
      */
     public function testLoadEmptyData()
     {

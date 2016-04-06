@@ -8,7 +8,7 @@
 echo "<?php\n";
 ?>
 
-class <?= $className ?> extends \yii\mongodb\Migration
+class <?= $className ?> extends \yii\rethinkdb\Migration
 {
     public function up()
     {

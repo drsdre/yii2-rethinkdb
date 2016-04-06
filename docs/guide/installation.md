@@ -3,7 +3,7 @@ Installation
 
 ## Requirements
 
-This extension requires [MongoDB PHP Extension](http://us1.php.net/manual/en/book.mongo.php) version 1.5.0 or higher.
+This extension requires [RethinkDB PHP Extension](http://us1.php.net/manual/en/book.rethink.php) version 1.5.0 or higher.
 
 ## Getting Composer package
 
@@ -12,13 +12,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist yiisoft/yii2-mongodb
+php composer.phar require --prefer-dist yiisoft/yii2-rethinkdb
 ```
 
 or add
 
 ```
-"yiisoft/yii2-mongodb": "~2.0.0"
+"yiisoft/yii2-rethinkdb": "~2.0.0"
 ```
 
 to the require section of your composer.json.
@@ -31,9 +31,9 @@ To use this extension, simply add the following code in your application configu
 return [
     //....
     'components' => [
-        'mongodb' => [
-            'class' => '\yii\mongodb\Connection',
-            'dsn' => 'mongodb://developer:password@localhost:27017/mydatabase',
+        'rethinkdb' => [
+            'class' => '\yii\rethinkdb\Connection',
+            'dsn' => 'rethinkdb://developer:password@localhost:27017/mydatabase',
         ],
     ],
 ];

@@ -1,21 +1,21 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
-use yii\mongodb\Collection;
-use yii\mongodb\file\Collection as FileCollection;
-use yii\mongodb\Connection;
-use yii\mongodb\Database;
+use yii\rethinkdb\Collection;
+use yii\rethinkdb\file\Collection as FileCollection;
+use yii\rethinkdb\Connection;
+use yii\rethinkdb\Database;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class ConnectionTest extends TestCase
 {
     public function testConstruct()
     {
         $connection = $this->getConnection(false);
-        $params = $this->mongoDbConfig;
+        $params = $this->rethinkDbConfig;
 
         $connection->open();
 
@@ -29,19 +29,19 @@ class ConnectionTest extends TestCase
         $connection = $this->getConnection(false, false);
 
         $this->assertFalse($connection->isActive);
-        $this->assertEquals(null, $connection->mongoClient);
+        $this->assertEquals(null, $connection->rethinkClient);
 
         $connection->open();
         $this->assertTrue($connection->isActive);
-        $this->assertTrue(is_object($connection->mongoClient));
+        $this->assertTrue(is_object($connection->rethinkClient));
 
         $connection->close();
         $this->assertFalse($connection->isActive);
-        $this->assertEquals(null, $connection->mongoClient);
+        $this->assertEquals(null, $connection->rethinkClient);
 
         $connection = new Connection;
         $connection->dsn = 'unknown::memory:';
-        $this->setExpectedException('yii\mongodb\Exception');
+        $this->setExpectedException('yii\rethinkdb\Exception');
         $connection->open();
     }
 
@@ -51,7 +51,7 @@ class ConnectionTest extends TestCase
 
         $database = $connection->getDatabase($connection->defaultDatabaseName);
         $this->assertTrue($database instanceof Database);
-        $this->assertTrue($database->mongoDb instanceof \MongoDB);
+        $this->assertTrue($database->rethinkDb instanceof \RethinkDB);
 
         $database2 = $connection->getDatabase($connection->defaultDatabaseName);
         $this->assertTrue($database === $database2);
@@ -68,11 +68,11 @@ class ConnectionTest extends TestCase
     {
         return [
             [
-                'mongodb://travis:test@localhost:27017/dbname',
+                'rethinkdb://travis:test@localhost:27017/dbname',
                 'dbname',
             ],
             [
-                'mongodb://travis:test@localhost:27017/dbname?replicaSet=test&connectTimeoutMS=300000',
+                'rethinkdb://travis:test@localhost:27017/dbname?replicaSet=test&connectTimeoutMS=300000',
                 'dbname',
             ],
         ];
@@ -104,19 +104,19 @@ class ConnectionTest extends TestCase
     public function testGetDefaultDatabase()
     {
         $connection = new Connection();
-        $connection->dsn = $this->mongoDbConfig['dsn'];
-        $connection->defaultDatabaseName = $this->mongoDbConfig['defaultDatabaseName'];
+        $connection->dsn = $this->rethinkDbConfig['dsn'];
+        $connection->defaultDatabaseName = $this->rethinkDbConfig['defaultDatabaseName'];
         $database = $connection->getDatabase();
         $this->assertTrue($database instanceof Database, 'Unable to get default database!');
 
         $connection = new Connection();
-        $connection->dsn = $this->mongoDbConfig['dsn'];
-        $connection->options = ['db' => $this->mongoDbConfig['defaultDatabaseName']];
+        $connection->dsn = $this->rethinkDbConfig['dsn'];
+        $connection->options = ['db' => $this->rethinkDbConfig['defaultDatabaseName']];
         $database = $connection->getDatabase();
         $this->assertTrue($database instanceof Database, 'Unable to determine default database from options!');
 
         $connection = new Connection();
-        $connection->dsn = $this->mongoDbConfig['dsn'] . '/' . $this->mongoDbConfig['defaultDatabaseName'];
+        $connection->dsn = $this->rethinkDbConfig['dsn'] . '/' . $this->rethinkDbConfig['defaultDatabaseName'];
         $database = $connection->getDatabase();
         $this->assertTrue($database instanceof Database, 'Unable to determine default database from dsn!');
     }

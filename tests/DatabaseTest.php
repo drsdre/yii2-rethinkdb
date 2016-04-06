@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
-use yii\mongodb\Collection;
-use yii\mongodb\file\Collection as FileCollection;
+use yii\rethinkdb\Collection;
+use yii\rethinkdb\file\Collection as FileCollection;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class DatabaseTest extends TestCase
 {
@@ -25,7 +25,7 @@ class DatabaseTest extends TestCase
 
         $collection = $database->getCollection('customer');
         $this->assertTrue($collection instanceof Collection);
-        $this->assertTrue($collection->mongoCollection instanceof \MongoCollection);
+        $this->assertTrue($collection->rethinkCollection instanceof \RethinkCollection);
 
         $collection2 = $database->getCollection('customer');
         $this->assertTrue($collection === $collection2);
@@ -40,7 +40,7 @@ class DatabaseTest extends TestCase
 
         $collection = $database->getFileCollection('testfs');
         $this->assertTrue($collection instanceof FileCollection);
-        $this->assertTrue($collection->mongoCollection instanceof \MongoGridFS);
+        $this->assertTrue($collection->rethinkCollection instanceof \RethinkGridFS);
 
         $collection2 = $database->getFileCollection('testfs');
         $this->assertTrue($collection === $collection2);
@@ -65,6 +65,6 @@ class DatabaseTest extends TestCase
     {
         $database = $connection = $this->getConnection()->getDatabase();
         $collection = $database->createCollection('customer');
-        $this->assertTrue($collection instanceof \MongoCollection);
+        $this->assertTrue($collection instanceof \RethinkCollection);
     }
 }

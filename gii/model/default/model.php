@@ -4,7 +4,7 @@
  */
 
 /* @var $this yii\web\View */
-/* @var $generator yii\mongodb\gii\model\Generator */
+/* @var $generator yii\rethinkdb\gii\model\Generator */
 /* @var $collectionName string full collection name */
 /* @var $attributes array list of attribute names */
 /* @var $className string class name */
@@ -22,7 +22,7 @@ use Yii;
  * This is the model class for collection "<?= $collectionName ?>".
  *
 <?php foreach ($attributes as $attribute): ?>
- * @property <?= $attribute == '_id' ? '\MongoId|string' : 'mixed' ?> <?= "\${$attribute}\n" ?>
+ * @property <?= $attribute == '_id' ? '\RethinkId|string' : 'mixed' ?> <?= "\${$attribute}\n" ?>
 <?php endforeach; ?>
  */
 class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . "\n" ?>
@@ -38,10 +38,10 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         return ['<?= $generator->databaseName ?>', '<?= $collectionName ?>'];
 <?php endif; ?>
     }
-<?php if ($generator->db !== 'mongodb'): ?>
+<?php if ($generator->db !== 'rethinkdb'): ?>
 
     /**
-     * @return \yii\mongodb\Connection the MongoDB connection used by this AR class.
+     * @return \yii\rethinkdb\Connection the RethinkDB connection used by this AR class.
      */
     public static function getDb()
     {

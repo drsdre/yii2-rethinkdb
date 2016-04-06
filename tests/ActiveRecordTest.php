@@ -1,17 +1,17 @@
 <?php
 
-namespace yiiunit\extensions\mongodb;
+namespace yiiunit\extensions\rethinkdb;
 
-use yii\mongodb\ActiveQuery;
-use yiiunit\extensions\mongodb\data\ar\ActiveRecord;
-use yiiunit\extensions\mongodb\data\ar\Customer;
-use yiiunit\extensions\mongodb\data\ar\Animal;
-use yiiunit\extensions\mongodb\data\ar\Dog;
-use yiiunit\extensions\mongodb\data\ar\Cat;
+use yii\rethinkdb\ActiveQuery;
+use yiiunit\extensions\rethinkdb\data\ar\ActiveRecord;
+use yiiunit\extensions\rethinkdb\data\ar\Customer;
+use yiiunit\extensions\rethinkdb\data\ar\Animal;
+use yiiunit\extensions\rethinkdb\data\ar\Dog;
+use yiiunit\extensions\rethinkdb\data\ar\Cat;
 
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class ActiveRecordTest extends TestCase
 {
@@ -129,7 +129,7 @@ class ActiveRecordTest extends TestCase
 
         $record->save();
 
-        $this->assertTrue($record->_id instanceof \MongoId);
+        $this->assertTrue($record->_id instanceof \RethinkId);
         $this->assertFalse($record->isNewRecord);
     }
 
@@ -295,7 +295,7 @@ class ActiveRecordTest extends TestCase
         $record = new Customer();
         $record->save(false);
 
-        $this->assertTrue($record->_id instanceof \MongoId);
+        $this->assertTrue($record->_id instanceof \RethinkId);
         $this->assertFalse($record->isNewRecord);
     }
     

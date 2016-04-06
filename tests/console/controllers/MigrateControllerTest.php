@@ -1,20 +1,20 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\console\controllers;
+namespace yiiunit\extensions\rethinkdb\console\controllers;
 
 use yii\console\controllers\BaseMigrateController;
 use yii\helpers\FileHelper;
-use yii\mongodb\Exception;
-use yii\mongodb\Migration;
-use yii\mongodb\Query;
+use yii\rethinkdb\Exception;
+use yii\rethinkdb\Migration;
+use yii\rethinkdb\Query;
 use Yii;
-use yiiunit\extensions\mongodb\TestCase;
+use yiiunit\extensions\rethinkdb\TestCase;
 
 /**
- * Unit test for [[\yii\mongodb\console\controllers\MigrateController]].
+ * Unit test for [[\yii\rethinkdb\console\controllers\MigrateController]].
  * @see MigrateController
  *
- * @group mongodb
+ * @group rethinkdb
  * @group console
  */
 class MigrateControllerTest extends TestCase
@@ -42,13 +42,13 @@ class MigrateControllerTest extends TestCase
         $this->setUpMigrationPath();
 
         $this->mockApplication();
-        Yii::$app->setComponents(['mongodb' => $this->getConnection()]);
+        Yii::$app->setComponents(['rethinkdb' => $this->getConnection()]);
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        if (extension_loaded('mongo')) {
+        if (extension_loaded('rethink')) {
             try {
                 $this->getConnection()->getCollection('migration')->drop();
             } catch (Exception $e) {
@@ -60,7 +60,7 @@ class MigrateControllerTest extends TestCase
 
     public function setUpMigrationPath()
     {
-        $this->migrationPath = Yii::getAlias('@yiiunit/extensions/mongodb/runtime/test_migrations');
+        $this->migrationPath = Yii::getAlias('@yiiunit/extensions/rethinkdb/runtime/test_migrations');
         FileHelper::createDirectory($this->migrationPath);
         if (!file_exists($this->migrationPath)) {
             $this->markTestIncomplete('Unit tests runtime directory should have writable permissions!');

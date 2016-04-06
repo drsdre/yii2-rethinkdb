@@ -5,16 +5,16 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb;
+namespace yii\rethinkdb;
 
 use yii\base\Object;
 use Yii;
 use yii\helpers\Json;
 
 /**
- * Database represents the Mongo database information.
+ * Database represents the Rethink database information.
  *
- * @property file\Collection $fileCollection Mongo GridFS collection. This property is read-only.
+ * @property file\Collection $fileCollection Rethink GridFS collection. This property is read-only.
  * @property string $name Name of this database. This property is read-only.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
@@ -23,9 +23,9 @@ use yii\helpers\Json;
 class Database extends Object
 {
     /**
-     * @var \MongoDB Mongo database instance.
+     * @var \RethinkDB Rethink database instance.
      */
-    public $mongoDb;
+    public $rethinkDb;
 
     /**
      * @var Collection[] list of collections.
@@ -42,14 +42,14 @@ class Database extends Object
      */
     public function getName()
     {
-        return $this->mongoDb->__toString();
+        return $this->rethinkDb->__toString();
     }
 
     /**
-     * Returns the Mongo collection with the given name.
+     * Returns the Rethink collection with the given name.
      * @param string $name collection name
      * @param boolean $refresh whether to reload the collection instance even if it is found in the cache.
-     * @return Collection Mongo collection instance.
+     * @return Collection Rethink collection instance.
      */
     public function getCollection($name, $refresh = false)
     {
@@ -61,10 +61,10 @@ class Database extends Object
     }
 
     /**
-     * Returns Mongo GridFS collection with given prefix.
+     * Returns Rethink GridFS collection with given prefix.
      * @param string $prefix collection prefix.
      * @param boolean $refresh whether to reload the collection instance even if it is found in the cache.
-     * @return file\Collection Mongo GridFS collection.
+     * @return file\Collection Rethink GridFS collection.
      */
     public function getFileCollection($prefix = 'fs', $refresh = false)
     {
@@ -83,8 +83,8 @@ class Database extends Object
     protected function selectCollection($name)
     {
         return Yii::createObject([
-            'class' => 'yii\mongodb\Collection',
-            'mongoCollection' => $this->mongoDb->selectCollection($name)
+            'class' => 'yii\rethinkdb\Collection',
+            'rethinkCollection' => $this->rethinkDb->selectCollection($name)
         ]);
     }
 
@@ -96,19 +96,19 @@ class Database extends Object
     protected function selectFileCollection($prefix)
     {
         return Yii::createObject([
-            'class' => 'yii\mongodb\file\Collection',
-            'mongoCollection' => $this->mongoDb->getGridFS($prefix)
+            'class' => 'yii\rethinkdb\file\Collection',
+            'rethinkCollection' => $this->rethinkDb->getGridFS($prefix)
         ]);
     }
 
     /**
      * Creates new collection.
-     * Note: Mongo creates new collections automatically on the first demand,
+     * Note: Rethink creates new collections automatically on the first demand,
      * this method makes sense only for the migration script or for the case
      * you need to create collection with the specific options.
      * @param string $name name of the collection
      * @param array $options collection options in format: "name" => "value"
-     * @return \MongoCollection new Mongo collection instance.
+     * @return \RethinkCollection new Rethink collection instance.
      * @throws Exception on failure.
      */
     public function createCollection($name, $options = [])
@@ -117,7 +117,7 @@ class Database extends Object
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = $this->mongoDb->createCollection($name, $options);
+            $result = $this->rethinkDb->createCollection($name, $options);
             Yii::endProfile($token, __METHOD__);
 
             return $result;
@@ -128,7 +128,7 @@ class Database extends Object
     }
 
     /**
-     * Executes Mongo command.
+     * Executes Rethink command.
      * @param array $command command specification.
      * @param array $options options in format: "name" => "value"
      * @return array database response.
@@ -140,7 +140,7 @@ class Database extends Object
         Yii::info($token, __METHOD__);
         try {
             Yii::beginProfile($token, __METHOD__);
-            $result = $this->mongoDb->command($command, $options);
+            $result = $this->rethinkDb->command($command, $options);
             $this->tryResultError($result);
             Yii::endProfile($token, __METHOD__);
 

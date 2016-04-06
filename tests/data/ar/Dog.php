@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yiiunit\extensions\mongodb\data\ar;
+namespace yiiunit\extensions\rethinkdb\data\ar;
 
 /**
  * Class Dog

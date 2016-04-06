@@ -1,21 +1,21 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\file;
+namespace yiiunit\extensions\rethinkdb\file;
 
-use yiiunit\extensions\mongodb\data\ar\Customer;
-use yiiunit\extensions\mongodb\data\ar\file\CustomerFile;
-use yiiunit\extensions\mongodb\TestCase;
+use yiiunit\extensions\rethinkdb\data\ar\Customer;
+use yiiunit\extensions\rethinkdb\data\ar\file\CustomerFile;
+use yiiunit\extensions\rethinkdb\TestCase;
 
 /**
- * @group mongodb
+ * @group rethinkdb
  */
 class ActiveRelationTest extends TestCase
 {
     protected function setUp()
     {
         parent::setUp();
-        \yiiunit\extensions\mongodb\data\ar\ActiveRecord::$db = $this->getConnection();
-        \yiiunit\extensions\mongodb\data\ar\file\ActiveRecord::$db = $this->getConnection();
+        \yiiunit\extensions\rethinkdb\data\ar\ActiveRecord::$db = $this->getConnection();
+        \yiiunit\extensions\rethinkdb\data\ar\file\ActiveRecord::$db = $this->getConnection();
         $this->setUpTestRows();
     }
 

@@ -11,12 +11,12 @@ for both A and B.
 Upgrade from Yii 2.0.1
 ----------------------
 
-* MongoDB PHP extension min version raised up to 1.5.0. You should upgrade your environment in case you are
+* RethinkDB PHP extension min version raised up to 1.5.0. You should upgrade your environment in case you are
   using older version.
 
 Upgrade from Yii 2.0.0
 ----------------------
 
-* MongoDB PHP extension min version raised up to 1.4.0. You should upgrade your environment in case you are
+* RethinkDB PHP extension min version raised up to 1.4.0. You should upgrade your environment in case you are
   using older version.
 

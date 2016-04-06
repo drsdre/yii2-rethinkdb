@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb\file;
+namespace yii\rethinkdb\file;
 
 use Yii;
 use yii\base\InvalidParamException;
@@ -13,7 +13,7 @@ use yii\db\StaleObjectException;
 use yii\web\UploadedFile;
 
 /**
- * ActiveRecord is the base class for classes representing Mongo GridFS files in terms of objects.
+ * ActiveRecord is the base class for classes representing Rethink GridFS files in terms of objects.
  *
  * To specify source file use the [[file]] attribute. It can be specified in one of the following ways:
  *  - string - full name of the file, which content should be stored in GridFS
@@ -43,7 +43,7 @@ use yii\web\UploadedFile;
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0
  */
-abstract class ActiveRecord extends \yii\mongodb\ActiveRecord
+abstract class ActiveRecord extends \yii\rethinkdb\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -55,7 +55,7 @@ abstract class ActiveRecord extends \yii\mongodb\ActiveRecord
     }
 
     /**
-     * Return the Mongo GridFS collection instance for this AR class.
+     * Return the Rethink GridFS collection instance for this AR class.
      * @return Collection collection instance.
      */
     public static function getCollection()
@@ -232,14 +232,14 @@ abstract class ActiveRecord extends \yii\mongodb\ActiveRecord
 
     /**
      * Refreshes the [[file]] attribute from file collection, using current primary key.
-     * @return \MongoGridFSFile|null refreshed file value.
+     * @return \RethinkGridFSFile|null refreshed file value.
      */
     public function refreshFile()
     {
-        $mongoFile = $this->getCollection()->get($this->getPrimaryKey());
-        $this->setAttribute('file', $mongoFile);
+        $rethinkFile = $this->getCollection()->get($this->getPrimaryKey());
+        $this->setAttribute('file', $rethinkFile);
 
-        return $mongoFile;
+        return $rethinkFile;
     }
 
     /**
@@ -255,7 +255,7 @@ abstract class ActiveRecord extends \yii\mongodb\ActiveRecord
         }
         if (empty($file)) {
             return null;
-        } elseif ($file instanceof \MongoGridFSFile) {
+        } elseif ($file instanceof \RethinkGridFSFile) {
             $fileSize = $file->getSize();
             if (empty($fileSize)) {
                 return null;
@@ -289,7 +289,7 @@ abstract class ActiveRecord extends \yii\mongodb\ActiveRecord
         }
         if (empty($file)) {
             throw new InvalidParamException('There is no file associated with this object.');
-        } elseif ($file instanceof \MongoGridFSFile) {
+        } elseif ($file instanceof \RethinkGridFSFile) {
             return ($file->write($filename) == $file->getSize());
         } elseif ($file instanceof UploadedFile) {
             return copy($file->tempName, $filename);
@@ -306,7 +306,7 @@ abstract class ActiveRecord extends \yii\mongodb\ActiveRecord
 
     /**
      * This method returns a stream resource that can be used with all file functions in PHP,
-     * which deal with reading files. The contents of the file are pulled out of MongoDB on the fly,
+     * which deal with reading files. The contents of the file are pulled out of RethinkDB on the fly,
      * so that the whole file does not have to be loaded into memory first.
      * @return resource file stream resource.
      * @throws \yii\base\InvalidParamException on invalid file attribute value.
@@ -319,7 +319,7 @@ abstract class ActiveRecord extends \yii\mongodb\ActiveRecord
         }
         if (empty($file)) {
             throw new InvalidParamException('There is no file associated with this object.');
-        } elseif ($file instanceof \MongoGridFSFile) {
+        } elseif ($file instanceof \RethinkGridFSFile) {
             return $file->getResource();
         } elseif ($file instanceof UploadedFile) {
             return fopen($file->tempName, 'r');

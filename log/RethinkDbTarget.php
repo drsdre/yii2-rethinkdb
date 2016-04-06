@@ -5,33 +5,33 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb\log;
+namespace yii\rethinkdb\log;
 
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
 use yii\helpers\VarDumper;
 use yii\log\Target;
-use yii\mongodb\Connection;
+use yii\rethinkdb\Connection;
 
 /**
- * MongoDbTarget stores log messages in a MongoDB collection.
+ * RethinkDbTarget stores log messages in a RethinkDB collection.
  *
- * By default, MongoDbTarget stores the log messages in a MongoDB collection named 'log'.
+ * By default, RethinkDbTarget stores the log messages in a RethinkDB collection named 'log'.
  * The collection can be changed by setting the [[logCollection]] property.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0
  */
-class MongoDbTarget extends Target
+class RethinkDbTarget extends Target
 {
     /**
-     * @var Connection|string the MongoDB connection object or the application component ID of the MongoDB connection.
-     * After the MongoDbTarget object is created, if you want to change this property, you should only assign it
-     * with a MongoDB connection object.
+     * @var Connection|string the RethinkDB connection object or the application component ID of the RethinkDB connection.
+     * After the RethinkDbTarget object is created, if you want to change this property, you should only assign it
+     * with a RethinkDB connection object.
      */
-    public $db = 'mongodb';
+    public $db = 'rethinkdb';
     /**
-     * @var string|array the name of the MongoDB collection that stores the session data.
+     * @var string|array the name of the RethinkDB collection that stores the session data.
      * Please refer to [[Connection::getCollection()]] on how to specify this parameter.
      * This collection is better to be pre-created with fields 'id' and 'expire' indexed.
      */
@@ -39,8 +39,8 @@ class MongoDbTarget extends Target
 
 
     /**
-     * Initializes the MongoDbTarget component.
-     * This method will initialize the [[db]] property to make sure it refers to a valid MongoDB connection.
+     * Initializes the RethinkDbTarget component.
+     * This method will initialize the [[db]] property to make sure it refers to a valid RethinkDB connection.
      * @throws InvalidConfigException if [[db]] is invalid.
      */
     public function init()
@@ -50,7 +50,7 @@ class MongoDbTarget extends Target
     }
 
     /**
-     * Stores log messages to MongoDB collection.
+     * Stores log messages to RethinkDB collection.
      */
     public function export()
     {

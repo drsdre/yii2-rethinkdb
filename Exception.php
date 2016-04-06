@@ -5,10 +5,10 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb;
+namespace yii\rethinkdb;
 
 /**
- * Exception represents an exception that is caused by some Mongo-related operations.
+ * Exception represents an exception that is caused by some Rethink-related operations.
  *
  * @author Paul Klimov <klimov.paul@gmail.com>
  * @since 2.0
@@ -20,6 +20,6 @@ class Exception extends \yii\base\Exception
      */
     public function getName()
     {
-        return 'MongoDB Exception';
+        return 'RethinkDB Exception';
     }
 }

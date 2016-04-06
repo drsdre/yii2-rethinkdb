@@ -1,8 +1,8 @@
-Using the MongoDB DebugPanel
+Using the RethinkDB DebugPanel
 ============================
 
-The yii2 MongoDB extensions provides a debug panel that can be integrated with the yii debug module
-and shows the executed MongoDB queries.
+The yii2 RethinkDB extensions provides a debug panel that can be integrated with the yii debug module
+and shows the executed RethinkDB queries.
 
 Add the following to you application config to enable it (if you already have the debug module
 enabled, it is sufficient to just add the panels configuration):
@@ -14,9 +14,9 @@ enabled, it is sufficient to just add the panels configuration):
         'debug' => [
             'class' => 'yii\\debug\\Module',
             'panels' => [
-                'mongodb' => [
-                    'class' => 'yii\\mongodb\\debug\\MongoDbPanel',
-                    // 'db' => 'db', // MongoDB component ID, defaults to `db`. Uncomment and change this line, if you registered MongoDB component with a different ID.
+                'rethinkdb' => [
+                    'class' => 'yii\\rethinkdb\\debug\\RethinkDbPanel',
+                    // 'db' => 'db', // RethinkDB component ID, defaults to `db`. Uncomment and change this line, if you registered RethinkDB component with a different ID.
                 ],
             ],
         ],

@@ -5,16 +5,16 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\mongodb;
+namespace yii\rethinkdb;
 
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
 
 /**
- * Cache implements a cache application component by storing cached data in a MongoDB.
+ * Cache implements a cache application component by storing cached data in a RethinkDB.
  *
- * By default, Cache stores session data in a MongoDB collection named 'cache' inside the default database.
+ * By default, Cache stores session data in a RethinkDB collection named 'cache' inside the default database.
  * This collection is better to be pre-created with fields 'id' and 'expire' indexed.
  * The collection name can be changed by setting [[cacheCollection]].
  *
@@ -24,8 +24,8 @@ use yii\di\Instance;
  *
  * ~~~
  * 'cache' => [
- *     'class' => 'yii\mongodb\Cache',
- *     // 'db' => 'mymongodb',
+ *     'class' => 'yii\rethinkdb\Cache',
+ *     // 'db' => 'myrethinkdb',
  *     // 'cacheCollection' => 'my_cache',
  * ]
  * ~~~
@@ -36,14 +36,14 @@ use yii\di\Instance;
 class Cache extends \yii\caching\Cache
 {
     /**
-     * @var Connection|array|string the MongoDB connection object or the application component ID of the MongoDB connection.
+     * @var Connection|array|string the RethinkDB connection object or the application component ID of the RethinkDB connection.
      * After the Cache object is created, if you want to change this property, you should only assign it
-     * with a MongoDB connection object.
+     * with a RethinkDB connection object.
      * Starting from version 2.0.2, this can also be a configuration array for creating the object.
      */
-    public $db = 'mongodb';
+    public $db = 'rethinkdb';
     /**
-     * @var string|array the name of the MongoDB collection that stores the cache data.
+     * @var string|array the name of the RethinkDB collection that stores the cache data.
      * Please refer to [[Connection::getCollection()]] on how to specify this parameter.
      * This collection is better to be pre-created with fields 'id' and 'expire' indexed.
      */
@@ -58,7 +58,7 @@ class Cache extends \yii\caching\Cache
 
     /**
      * Initializes the Cache component.
-     * This method will initialize the [[db]] property to make sure it refers to a valid MongoDB connection.
+     * This method will initialize the [[db]] property to make sure it refers to a valid RethinkDB connection.
      * @throws InvalidConfigException if [[db]] is invalid.
      */
     public function init()

@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\extensions\mongodb\data\ar;
+namespace yiiunit\extensions\rethinkdb\data\ar;
 
-use yii\mongodb\ActiveQuery;
+use yii\rethinkdb\ActiveQuery;
 
 /**
  * CustomerQuery
